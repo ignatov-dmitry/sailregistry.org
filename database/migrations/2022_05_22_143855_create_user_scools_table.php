@@ -13,10 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('certificate_types', function (Blueprint $table) {
-            $table->id();
-            $table->string('name')->nullable();
-            $table->string('code')->nullable();
+        Schema::create('user_scools', function (Blueprint $table) {
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('school_id');
+            $table->primary(['user_id', 'school_id']);
+            $table->index('school_id');
         });
     }
 
@@ -27,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('certificates');
+        Schema::dropIfExists('user_scools');
     }
 };

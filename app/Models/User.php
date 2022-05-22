@@ -72,7 +72,6 @@ class User extends Authenticatable
         'email',
         'password',
     ];
-
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -91,4 +90,31 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    protected $appends = array(
+        'role_name',
+        'role_level'
+    );
+
+    const BASIC_CONTRIBUTOR = 'basic_contributor';
+    const INSTRUCTOR        = 'instructor';
+    const SCHOOL_ADMIN      = 'school_admin';
+    const CO_ADMIN          = 'co_admin';
+    const SUPER_ADMIN       = 'super_admin';
+
+    static $roles = array(
+        self::BASIC_CONTRIBUTOR => array('level' => 5, 'name' => 'Обычный пользователь'),
+        self::INSTRUCTOR        => array('level' => 4, 'name' => 'Инструктор школы'),
+        self::SCHOOL_ADMIN      => array('level' => 3, 'name' => 'Администратор школы'),
+        self::CO_ADMIN          => array('level' => 2, 'name' => 'Администратор ЦО'),
+        self::SUPER_ADMIN       => array('level' => 1, 'name' => 'Администратор системы')
+    );
+
+    public function getRoleNameAttribute() {
+        return self::$roles[$this->attributes['role']]['name'];
+    }
+
+    public function getRoleLevelAttribute() {
+        return self::$roles[$this->attributes['role']]['level'];
+    }
 }

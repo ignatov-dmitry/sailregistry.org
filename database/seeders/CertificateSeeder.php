@@ -15,28 +15,34 @@ class CertificateSeeder extends Seeder
      */
     public function run()
     {
-        $query = DB::table('legacy_certificates')->get()->toArray();
+        $query = DB::select(
+            'select distinct course_name AS name, course_code AS code from legacy_certificates order by course_name;'
+        );
 
         $certificates = array();
-        $group = 0;
         $iteration = 0;
         foreach ($query as $item) {
-            if ($iteration < 200){
-                $item = json_decode(json_encode($item),true);
-                $item['issue_date'] = $item['issue_date'] !== '' ? date('Y-m-d', strtotime($item['issue_date'])) : null;
-                $item['expiry_date'] = $item['expiry_date'] !== '' ? date('Y-m-d', strtotime($item['expiry_date'])) : null;
-                $item['revalidation_date'] = $item['revalidation_date'] !== '' ? date('Y-m-d', strtotime($item['revalidation_date'])) : null;
-                $certificates[$group][] = $item;
+            if ($item->name == '')
+                continue;
+            if ($iteration < 200) {
+                $certificates[] = [
+                    'name' => htmlspecialchars_decode($item->name),
+                    'code' => $item->code
+                ];
                 $iteration++;
             }
             else {
-                $group++;
+                $certificates[] = [
+                    'name' => htmlspecialchars_decode($item->name),
+                    'code' => $item->code
+                ];
+                DB::table('certificate_types')->insert($certificates);
+                $certificates = array();
                 $iteration = 0;
             }
         }
 
-        foreach ($certificates as $group_certificates) {
-            DB::table('certificates')->insert($group_certificates);
-        }
+        if (count($certificates) > 0)
+            DB::table('certificate_types')->insert($certificates);
     }
 }

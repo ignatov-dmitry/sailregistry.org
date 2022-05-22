@@ -2,7 +2,7 @@
 
 namespace App\Exports;
 
-use App\Models\Certificate;
+use App\Models\CertificateType;
 use App\Models\LegacyModels\LegacyCertificate;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\FromCollection;
@@ -20,7 +20,7 @@ class UsersExport implements FromCollection, WithHeadings, WithStyles, WithEvent
     */
     public function collection()
     {
-        $scools = Certificate::distinct()->leftJoin('users AS u', 'u.old_id', '=', 'certificates.user_id')
+        $scools = CertificateType::distinct()->leftJoin('users AS u', 'u.old_id', '=', 'certificates.user_id')
             ->select(DB::raw('certificates.school_name,
                 u.first_name,
                 u.middle_name,

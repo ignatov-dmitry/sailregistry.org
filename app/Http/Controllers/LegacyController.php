@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exports\UsersExport;
-use App\Models\Certificate;
+use App\Models\CertificateType;
 use App\Models\LegacyModels\LegacyCertificate;
 use App\Models\LegacyModels\LegacyUser;
 use App\Models\LegacyModels\LegacyWpuaPost;

@@ -22,10 +22,11 @@ return new class extends Migration
             $table->integer('old_id')->nullable()->after('id');
             $table->string('role')->after('old_id');
             $table->string('public_id')->nullable()->after('old_id');
-            $table->date('birthday')->nullable();
-            $table->string('country')->nullable();
-            $table->string('user_status')->nullable();
-            $table->text('img_src')->nullable();
+            $table->date('birthday')->nullable()->after('last_name');
+            $table->unsignedBigInteger('country_id')->nullable()->default(0)->after('last_name');
+            $table->string('country')->nullable()->after('last_name');
+            $table->string('user_status')->nullable()->after('last_name');
+            $table->text('img_src')->nullable()->after('last_name');
         });
     }
 

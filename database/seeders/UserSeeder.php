@@ -42,21 +42,50 @@ class UserSeeder extends Seeder
             ORDER BY lwu.ID
         ');
 
+
+        $users = array();
+        $pass = Hash::make('qwerty123');
+        $iteration = 0;
+
         foreach ($query as $item) {
-            DB::table('users')->insert([
-                'user_login'  => $item->user_login,
-                'role'        => array_keys(unserialize($item->role))[0],
-                'old_id'      => (int)$item->old_id,
-                'birthday'    => $item->birthday !== '' ? date('Y-m-d', strtotime($item->birthday)) : null,
-                'first_name'  => $item->first_name,
-                'last_name'   => $item->last_name,
-                'middle_name' => $item->middle_name,
-                'public_id'   => $item->public_id,
-                'country'     => $item->country,
-                'user_status' => $item->user_status,
-                'img_src'     => $item->img_src,
-                'password'    => Hash::make('qwerty123')
-            ]);
+            if ($iteration < 200) {
+                $users[] = [
+                    'user_login'  => $item->user_login,
+                    'role'        => array_keys(unserialize($item->role))[0],
+                    'old_id'      => (int)$item->old_id,
+                    'birthday'    => $item->birthday !== '' ? date('Y-m-d', strtotime($item->birthday)) : null,
+                    'first_name'  => $item->first_name,
+                    'last_name'   => $item->last_name,
+                    'middle_name' => $item->middle_name,
+                    'public_id'   => $item->public_id,
+                    'country'     => $item->country,
+                    'user_status' => $item->user_status,
+                    'img_src'     => $item->img_src,
+                    'password'    => $pass
+                ];
+                $iteration++;
+            }
+            else {
+                $users[] = [
+                    'user_login'  => $item->user_login,
+                    'role'        => array_keys(unserialize($item->role))[0],
+                    'old_id'      => (int)$item->old_id,
+                    'birthday'    => $item->birthday !== '' ? date('Y-m-d', strtotime($item->birthday)) : null,
+                    'first_name'  => $item->first_name,
+                    'last_name'   => $item->last_name,
+                    'middle_name' => $item->middle_name,
+                    'public_id'   => $item->public_id,
+                    'country'     => $item->country,
+                    'user_status' => $item->user_status,
+                    'img_src'     => $item->img_src,
+                    'password'    => $pass
+                ];
+                DB::table('users')->insert($users);
+                $users = array();
+                $iteration = 0;
+            }
         }
+        if (count($users) > 0)
+            DB::table('users')->insert($users);
     }
 }
