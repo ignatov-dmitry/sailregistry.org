@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('user_certificates', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id')->nullable();
+            $table->integer('old_id')->nullable();
             $table->unsignedBigInteger('certificate_id')->nullable();
             $table->unsignedBigInteger('school_id')->nullable();
             $table->unsignedBigInteger('instructor_id')->nullable();

@@ -21,10 +21,9 @@ use Maatwebsite\Excel\Facades\Excel;
 class LegacyController extends Controller
 {
     public function search(Request $request) {
-        //return Excel::download(new UsersExport(), 'users.xlsx');
 
-        return Excel::download(new UsersExport, 'users.xlsx');
-        //$users = LegacyUser::distinct()->leftJoin('');
-        return view('legacy.search', compact('scools'));
+        return Excel::download(new UsersExport(), 'users.xlsx');
+
+        //return view('legacy.search', compact('scools'));
     }
 }

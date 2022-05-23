@@ -57,6 +57,14 @@ use Laravel\Sanctum\HasApiTokens;
  * @method static \Illuminate\Database\Eloquent\Builder|User whereUserLogin($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereUserStatus($value)
  * @mixin \Eloquent
+ * @property string|null $img_src
+ * @property int|null $country_id
+ * @property string|null $birthday
+ * @property-read mixed $role_level
+ * @property-read mixed $role_name
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereBirthday($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereCountryId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereImgSrc($value)
  */
 class User extends Authenticatable
 {

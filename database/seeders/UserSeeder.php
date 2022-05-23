@@ -2,7 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\Country;
 use App\Models\LegacyModels\LegacyWpuaUser;
+use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -48,6 +50,8 @@ class UserSeeder extends Seeder
         $iteration = 0;
 
         foreach ($query as $item) {
+            $country_id = Country::where('name', '=', $item->country)->first();
+
             if ($iteration < 200) {
                 $users[] = [
                     'user_login'  => $item->user_login,
@@ -87,5 +91,15 @@ class UserSeeder extends Seeder
         }
         if (count($users) > 0)
             DB::table('users')->insert($users);
+
+        $users = User::get();
+
+        foreach ($users as $user) {
+            if ($user->country != null) {
+                $country = Country::where('name', '=', $user->country)->first();
+                $user->country_id = $country ? $country->id : null;
+                $user->save();
+            }
+        }
     }
 }

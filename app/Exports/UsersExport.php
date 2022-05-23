@@ -4,6 +4,7 @@ namespace App\Exports;
 
 use App\Models\CertificateType;
 use App\Models\LegacyModels\LegacyCertificate;
+use App\Models\UserCertificate;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithEvents;
@@ -20,40 +21,46 @@ class UsersExport implements FromCollection, WithHeadings, WithStyles, WithEvent
     */
     public function collection()
     {
-        $scools = CertificateType::distinct()->leftJoin('users AS u', 'u.old_id', '=', 'certificates.user_id')
-            ->select(DB::raw('certificates.school_name,
-                u.first_name,
-                u.middle_name,
-                u.last_name,
-                u.birthday,
-                certificates.*
-              '
+//        $scools = CertificateType::distinct()
+//            ->leftJoin('users AS u', 'u.old_id', '=', 'certificates.user_id')
+//            ->select(DB::raw('certificates.school_name,
+//                u.first_name,
+//                u.middle_name,
+//                u.last_name,
+//                u.birthday,
+//                certificates.*
+//              '
+//            ))
+//            ->whereIn('school_name', array('RAYS'))
+//            ->whereBetween('expiry_date', array('2022-01-01', '2022-08-31'))
+//            ->orderBy('certificates.school_name')
+//            ->get();
+
+        $users = UserCertificate::from('user_certificates as uc')
+            ->select(array(
+                's.name',
+                'u.first_name',
+                'u.middle_name',
+                'u.last_name',
+                'u.birthday',
+                'u.old_id',
+                'uc.certificate_number',
+                'ct.code',
+                'ct.name as certificate_name',
+                'lc.instructor_name',
+                'uc.issue_date',
+                'uc.expiry_date',
+                'uc.revalidation_date'
             ))
-            ->whereIn('school_name', array(
-                'Atlas Marine Ltd.',
-                'Atlas Marine Vladivostok',
-                'Atlas Sailing',
-                'Atlas Sailing Greece',
-                'Atlas Sailing Spain',
-                'Atlas Sailing UK',
-                'European Sailing School',
-                'European Yacht Training',
-                'Friends and Family Sailing School',
-                'Friends Travel Yachting School',
-                'RAYS',
-                'North-West Yacht School',
-                'North West Sailing Education',
-                'Russian Association of Yacht Skippers',
-                'Sailing Time',
-                'Sailing Time — Italy',
-                'Yacht Captains Club',
-                'Yacht Captains Club Montenegro'
-            ))
-            ->whereBetween('expiry_date', array('2022-01-01', '2022-08-31'))
-            ->orderBy('certificates.school_name')
+            ->leftJoin('schools as s', 's.id', '=', 'uc.school_id')
+            ->leftJoin('certificate_types as ct', 'ct.id', '=', 'uc.certificate_id')
+            ->leftJoin('users as u', 'u.id', '=', 'uc.user_id')
+            ->leftJoin('legacy_certificates as lc', 'lc.user_id', '=', 'uc.old_id')
+            ->whereIn('s.name', array('Daleco'))
+            ->whereBetween('uc.expiry_date', array('2022-01-01', '2022-08-31'))
             ->get();
 
-        return $scools;
+        return $users;
     }
 
     public function headings(): array
