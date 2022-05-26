@@ -18,8 +18,11 @@ class DatabaseSeeder extends Seeder
             CountrySeeder::class,
             CertificateSeeder::class,
             SchoolSeeder::class,
+            RoleSeed::class,
             UserSeeder::class,
-            UserCertificateSeeder::class
+            UserCertificateSeeder::class,
+            UserRolesSeed::class,
+            UserSchoolsSeeder::class
         ]);
         // \App\Models\User::factory(10)->create();
 

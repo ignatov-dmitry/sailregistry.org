@@ -31,7 +31,8 @@ class UserSeeder extends Seeder
                    lwum_public_id.meta_value AS public_id,
                    lu.country,
                    lu.user_status,
-                   lu.img_src
+                   lu.img_src,
+                   lu.name AS lu_name
             FROM legacy_wpua_users AS lwu
                 LEFT JOIN legacy_wpua_usermeta AS lwum_capabilities ON lwu.ID = lwum_capabilities.user_id AND lwum_capabilities.meta_key = \'wpua_capabilities\'
                 LEFT JOIN legacy_wpua_usermeta AS lwum_old_id ON lwu.ID = lwum_old_id.user_id AND lwum_old_id.meta_key = \'_old_id\'
@@ -50,40 +51,31 @@ class UserSeeder extends Seeder
         $iteration = 0;
 
         foreach ($query as $item) {
-            $country_id = Country::where('name', '=', $item->country)->first();
-
-            if ($iteration < 200) {
-                $users[] = [
-                    'user_login'  => $item->user_login,
-                    'role'        => array_keys(unserialize($item->role))[0],
-                    'old_id'      => (int)$item->old_id,
-                    'birthday'    => $item->birthday !== '' ? date('Y-m-d', strtotime($item->birthday)) : null,
-                    'first_name'  => $item->first_name,
-                    'last_name'   => $item->last_name,
-                    'middle_name' => $item->middle_name,
-                    'public_id'   => $item->public_id,
-                    'country'     => $item->country,
-                    'user_status' => $item->user_status,
-                    'img_src'     => $item->img_src,
-                    'password'    => $pass
-                ];
-                $iteration++;
+            $country_id = null;
+            if ($item->country != null) {
+                $country = Country::where('name', '=', $item->country)->first();
+                $country_id = $country ? $country->id : null;
             }
+            $users[] = [
+                'user_login'  => $item->user_login,
+                'role'        => array_keys(unserialize($item->role))[0],
+                'old_id'      => (int)$item->old_id,
+                'wp_user_id'  => (int)$item->ID,
+                'birthday'    => $item->birthday !== '' ? date('Y-m-d', strtotime($item->birthday)) : null,
+                'first_name'  => $item->first_name,
+                'last_name'   => $item->last_name,
+                'full_name'   => $item->lu_name,
+                'middle_name' => $item->middle_name,
+                'public_id'   => $item->public_id,
+                'country'     => $item->country,
+                'country_id'  => $country_id,
+                'user_status' => $item->user_status,
+                'img_src'     => $item->img_src,
+                'password'    => $pass
+            ];
+            if ($iteration < 200)
+                $iteration++;
             else {
-                $users[] = [
-                    'user_login'  => $item->user_login,
-                    'role'        => array_keys(unserialize($item->role))[0],
-                    'old_id'      => (int)$item->old_id,
-                    'birthday'    => $item->birthday !== '' ? date('Y-m-d', strtotime($item->birthday)) : null,
-                    'first_name'  => $item->first_name,
-                    'last_name'   => $item->last_name,
-                    'middle_name' => $item->middle_name,
-                    'public_id'   => $item->public_id,
-                    'country'     => $item->country,
-                    'user_status' => $item->user_status,
-                    'img_src'     => $item->img_src,
-                    'password'    => $pass
-                ];
                 DB::table('users')->insert($users);
                 $users = array();
                 $iteration = 0;
@@ -92,14 +84,14 @@ class UserSeeder extends Seeder
         if (count($users) > 0)
             DB::table('users')->insert($users);
 
-        $users = User::get();
-
-        foreach ($users as $user) {
-            if ($user->country != null) {
-                $country = Country::where('name', '=', $user->country)->first();
-                $user->country_id = $country ? $country->id : null;
-                $user->save();
-            }
-        }
+//        $users = User::get();
+//
+//        foreach ($users as $user) {
+//            if ($user->country != null) {
+//                $country = Country::where('name', '=', $user->country)->first();
+//                $user->country_id = $country ? $country->id : null;
+//                $user->save();
+//            }
+//        }
     }
 }

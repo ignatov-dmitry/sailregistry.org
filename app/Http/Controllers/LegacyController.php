@@ -22,7 +22,19 @@ class LegacyController extends Controller
 {
     public function search(Request $request) {
 
-        return Excel::download(new UsersExport(), 'users.xlsx');
+        $school_certificates = DB::table('schools as s')
+            ->select(['s.id as s_id', 'ct.id', 'ls.course_name'])
+            ->leftJoin('legacy_certificates as ls', 's.name', '=', 'ls.school_name')
+            ->leftJoin('certificate_types as ct', 'ls.course_name', '=', 'ct.name')
+            ->distinct()
+            ->where('course_name', '!=', '')
+            ->get()
+            ->groupBy('s_id')
+            ->toArray()
+        ;
+        dd($school_certificates);
+
+        //return Excel::download(new UsersExport(), 'users.xlsx');
 
         //return view('legacy.search', compact('scools'));
     }

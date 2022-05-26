@@ -55,11 +55,12 @@ class UsersExport implements FromCollection, WithHeadings, WithStyles, WithEvent
             ->leftJoin('schools as s', 's.id', '=', 'uc.school_id')
             ->leftJoin('certificate_types as ct', 'ct.id', '=', 'uc.certificate_id')
             ->leftJoin('users as u', 'u.id', '=', 'uc.user_id')
-            ->leftJoin('legacy_certificates as lc', 'lc.user_id', '=', 'uc.old_id')
-            ->whereIn('s.name', array('Daleco'))
-            ->whereBetween('uc.expiry_date', array('2022-01-01', '2022-08-31'))
+            ->leftJoin('legacy_certificates as lc', 'lc.certificate_number', '=', 'uc.certificate_number')
+            ->whereIn('s.name', array('Navigatore'))
+            //->where('uc.old_id', '=', '113003')
+            //->whereBetween('uc.expiry_date', array('2022-01-01', '2022-08-31'))
             ->get();
-
+//dd($users);
         return $users;
     }
 

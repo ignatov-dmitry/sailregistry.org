@@ -19,7 +19,9 @@ return new class extends Migration
             $table->integer('old_id')->nullable();
             $table->unsignedBigInteger('certificate_id')->nullable();
             $table->unsignedBigInteger('school_id')->nullable();
+            $table->string('school_name')->nullable();
             $table->unsignedBigInteger('instructor_id')->nullable();
+            $table->string('instructor_name')->nullable();
             $table->string('certificate_number')->nullable();
             $table->date('issue_date')->nullable();
             $table->date('expiry_date')->nullable();
