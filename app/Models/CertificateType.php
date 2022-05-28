@@ -11,7 +11,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id
  * @property string|null $name
  * @property string|null $code
- * @property-read mixed $link
  * @method static \Illuminate\Database\Eloquent\Builder|CertificateType newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|CertificateType newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|CertificateType query()

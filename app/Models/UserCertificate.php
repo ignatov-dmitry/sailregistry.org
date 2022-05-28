@@ -13,11 +13,14 @@ use Illuminate\Database\Eloquent\Model;
  * @property int|null $old_id
  * @property int|null $certificate_id
  * @property int|null $school_id
+ * @property string|null $school_name
  * @property int|null $instructor_id
+ * @property string|null $instructor_name
  * @property string|null $certificate_number
  * @property string|null $issue_date
  * @property string|null $expiry_date
  * @property string|null $revalidation_date
+ * @property-read mixed $link
  * @method static \Illuminate\Database\Eloquent\Builder|UserCertificate newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|UserCertificate newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|UserCertificate query()
@@ -26,10 +29,12 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|UserCertificate whereExpiryDate($value)
  * @method static \Illuminate\Database\Eloquent\Builder|UserCertificate whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|UserCertificate whereInstructorId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserCertificate whereInstructorName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|UserCertificate whereIssueDate($value)
  * @method static \Illuminate\Database\Eloquent\Builder|UserCertificate whereOldId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|UserCertificate whereRevalidationDate($value)
  * @method static \Illuminate\Database\Eloquent\Builder|UserCertificate whereSchoolId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserCertificate whereSchoolName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|UserCertificate whereUserId($value)
  * @mixin \Eloquent
  */

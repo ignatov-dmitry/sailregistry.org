@@ -18,17 +18,17 @@ class RoleSeed extends Seeder
         DB::table('roles')->insert(array(
             [
                 'name'  => 'Администратор системы',
-                'slug'  => 'super_admin',
+                'slug'  => 'super-admin',
                 'level' => '1'
             ],
             [
                 'name'  => 'Администратор ЦО',
-                'slug'  => 'co_admin',
+                'slug'  => 'co-admin',
                 'level' => '2'
             ],
             [
                 'name'  => 'Администратор школы',
-                'slug'  => 'school_admin',
+                'slug'  => 'school-admin',
                 'level' => '3'
             ],
             [
@@ -38,7 +38,7 @@ class RoleSeed extends Seeder
             ],
             [
                 'name'  => 'Обычный пользователь',
-                'slug'  => 'basic_contributor',
+                'slug'  => 'basic-contributor',
                 'level' => '5'
             ]
         ));

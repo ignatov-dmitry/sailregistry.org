@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * App\Models\UserScool
+ * App\Models\UserSchool
  *
  * @property int $user_id
  * @property int $school_id
