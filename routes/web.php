@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\LegacyController;
+use App\Http\Controllers\StudentsController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -30,6 +31,10 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::group(['middleware' => 'role:super-admin'], function (){
-
+Route::group(['prefix' => 'students', 'as' => 'students.'], function () {
+    Route::get('/', [StudentsController::class, 'index'])->middleware(['middleware' => 'role:super-admin'])->name('list');
+    Route::get('/{user}', [StudentsController::class, 'showStudent'])->name('student');
+    Route::get('/certificate/{user}/{group}', [StudentsController::class, 'showDataForCertificate'])->middleware(['middleware' => 'role:super-admin'])->name('certificate_data');
+    Route::post('/certificate/get/{user}', [StudentsController::class, 'toPdf'])->middleware(['middleware' => 'role:super-admin'])->name('get_certificate');
 });
+

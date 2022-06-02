@@ -20,7 +20,11 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $issue_date
  * @property string|null $expiry_date
  * @property string|null $revalidation_date
+ * @property-read \App\Models\CertificateType|null $certificateType
  * @property-read mixed $link
+ * @property-read \App\Models\User|null $instructor
+ * @property-read \App\Models\School|null $school
+ * @property-read \App\Models\User|null $user
  * @method static \Illuminate\Database\Eloquent\Builder|UserCertificate newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|UserCertificate newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|UserCertificate query()
@@ -46,5 +50,21 @@ class UserCertificate extends Model
 
     public function getLinkAttribute() {
         return 'https://iytnet.com/certprofile/' . $this->attributes['old_id'];
+    }
+
+    public function certificateType() {
+        return $this->hasOne(CertificateType::class, 'id', 'certificate_id');
+    }
+
+    public function school() {
+        return $this->hasOne(School::class, 'id', 'school_id');
+    }
+
+    public function instructor() {
+        return $this->hasOne(User::class, 'id', 'instructor_id');
+    }
+
+    public function user() {
+        return $this->hasOne(User::class, 'id', 'user_id');
     }
 }

@@ -6,3 +6,9 @@
 
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
+
+@import "~selectize/dist/css/selectize.css";
+
+.profile .img-thumbnail {
+    max-width: 100px;
+}
