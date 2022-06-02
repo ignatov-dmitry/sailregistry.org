@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
     <div class="container">
-        <form style="padding: 0 20%" action="{{ route('students.get_certificate', $certificate->user) }}" method="post">
+        <form style="padding: 0 20%" action="{{ route('student.get_certificate', $certificate->user) }}" method="post">
             @csrf
             <input type="hidden" name="user_id">
             <div class="form-group">

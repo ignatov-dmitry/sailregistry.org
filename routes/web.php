@@ -31,9 +31,9 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::group(['prefix' => 'students', 'as' => 'students.'], function () {
-    Route::get('/', [StudentsController::class, 'index'])->middleware(['middleware' => 'role:super-admin'])->name('list');
-    Route::get('/{user}', [StudentsController::class, 'showStudent'])->name('student');
+Route::group(['prefix' => 'student', 'as' => 'student.'], function () {
+    Route::get('/list', [StudentsController::class, 'index'])->middleware(['middleware' => 'role:super-admin'])->name('list');
+    Route::get('/{hash}', [StudentsController::class, 'showStudent'])->name('student');
     Route::get('/certificate/{user}/{group}', [StudentsController::class, 'showDataForCertificate'])->middleware(['middleware' => 'role:super-admin'])->name('certificate_data');
     Route::post('/certificate/get/{user}', [StudentsController::class, 'toPdf'])->middleware(['middleware' => 'role:super-admin'])->name('get_certificate');
 });

@@ -51,9 +51,11 @@
                             <td></td>
                         </tr>
                     @endforeach
+                    @role('super-admin')
                     <tr>
-                        <td colspan="10"><td><a class="btn btn-outline-success" href="{{ route('students.certificate_data', ['user' => $user, 'group' => $key]) }}">Выпустить сертификат</a></td></td>
+                        <td colspan="10"><td><a class="btn btn-outline-success" href="{{ route('student.certificate_data', ['user' => $user, 'group' => $key]) }}">Выпустить сертификат</a></td></td>
                     </tr>
+                    @endrole
                 @endforeach
             </tbody>
 
@@ -63,7 +65,7 @@
                 PROFILE LINK QR CODE
             </div>
             <div class="card-body">
-                <p class="text-center">{!! QrCode::size(120)->generate(route('students.student', $user)); !!}</p>
+                <p class="text-center">{!! QrCode::size(120)->generate(route('student.student', $user->hash)); !!}</p>
             </div>
         </div>
     </div>

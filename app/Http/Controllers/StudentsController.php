@@ -27,6 +27,7 @@ class StudentsController extends Controller
         $students = User::select(
             [
                 'users.id',
+                'users.hash',
                 'users.old_id',
                 'users.full_name',
                 'users.birthday',
@@ -50,7 +51,8 @@ class StudentsController extends Controller
         return view('students.students_list', compact('students', 'total', 'russian_schools'));
     }
 
-    public function showStudent(User $user) {
+    public function showStudent($hash) {
+        $user = User::whereHash($hash)->first();
         $userCertificatesGroups = UserCertificate::whereUserId($user->id)
             ->leftJoin('certificate_types as ct', 'ct.id', '=', 'user_certificates.certificate_id')
             ->leftJoin('certificate_types as ct_ru', 'ct_ru.id', '=', 'ct.certificate_type_parent_id')
@@ -111,7 +113,7 @@ class StudentsController extends Controller
         $qr = 'qr.png';
         $image = QrCode::size(1000)
             ->format('png')
-            ->generate(route('students.student', $user));
+            ->generate(route('student.student', $user->hash));
 
         $pdf = new Fpdi();
         $pdf->SetAutoPageBreak(true,0);

@@ -3,7 +3,7 @@
 @section('content')
     <div class="container">
         Total: {{ $total }}
-        <form action="{{ route('students.list') }}" method="GET">
+        <form action="{{ route('student.list') }}" method="GET">
             <div class="form-group row">
                 <div class="col-md-4">
                     <select multiple name="schools[]" id="schools">
@@ -46,7 +46,7 @@
                     <td>{{ $student->full_name }}</td>
                     <td>{{ $student->birthday }}</td>
                     <td>{{ $student->school_names }}</td>
-                    <td><a href="{{ route('students.student', $student) }}">Перейти</a></td>
+                    <td><a href="{{ route('student.student', $student->hash) }}">Перейти</a></td>
                 </tr>
             @endforeach
             </tbody>
