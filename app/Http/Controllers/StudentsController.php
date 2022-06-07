@@ -3,16 +3,16 @@
 namespace App\Http\Controllers;
 
 
+use App\Classes\PDF_EPS;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\UserCertificate;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\File;
+use Imagick;
 use Intervention\Image\Facades\Image;
 use setasign\Fpdi\Tfpdf\Fpdi;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
-use ZipArchive;
 
 class StudentsController extends Controller
 {
@@ -128,16 +128,16 @@ class StudentsController extends Controller
         $pdf->AddPage("L", array($specs['width'], $specs['height']));
         $pdf->useTemplate($tplIdx);
 
-        $pdf->SetXY(2, 18);
-        $pdf->SetFont('Helvetica', '', 4.5);
-        $pdf->SetTextColor(255, 255, 255);
-        $pdf->Write(0, 'REGISTRY OF SAILING COMPETENCY');
+//        $pdf->SetXY(4.5, 20);
+//        $pdf->SetFont('Helvetica', '', 4.5);
+//        $pdf->SetTextColor(255, 255, 255);
+//        $pdf->Write(0, 'REGISTRY OF SAILING COMPETENCY');
 
         $profilePhoto = 'profile.jpg';
         if ($user->img_src) {
             $userPhoto = Image::make($user->img_src);
             file_put_contents($profilePhoto,$userPhoto->encode('jpg')); {
-                $pdf->Image($profilePhoto, 3, 21, 25.6);
+                $pdf->Image($profilePhoto, 5.5, 22.97, 25.5);
                 unlink($profilePhoto);
             }
         }
@@ -146,24 +146,24 @@ class StudentsController extends Controller
 
         $pdf->SetFont('Helvetica-Bold', '', 12);
         $pdf->SetTextColor(255, 255, 255);
-        $pdf->Text(30, 27, strtoupper($request->get('full_name')));
+        $pdf->Text(31.8, 28.7, strtoupper($request->get('full_name')));
 
         $pdf->SetFont('Helvetica', '', 9);
-        $pdf->SetXY(28.9, 32);
+        $pdf->SetXY(31.3, 32.8);
         $pdf->MultiCell(65, 4, strtoupper($request->get('certificate_name') . ' ' . $request->get('certificate_code')), null, 'L');
-        $pdf->Text(30, 45, 'DOB: ' . date_format(date_create($request->get('birthday')), 'd.m.Y'));
+        $pdf->Text(32.55, 42.8, 'DOB: ' . date_format(date_create($request->get('birthday')), 'd.m.Y'));
 
-        $pdf->SetFont('Helvetica', '', 7);
-        $pdf->SetXY(35, 4);
+        $pdf->SetFont('Helvetica', '', 8);
+        $pdf->SetXY(35, 6.2);
         $pdf->Cell(50, 0, 'CERT № ' . $request->get('certificate_code') . ' - ' . $request->get('certificate_number'), 0, 0, 'R');
 
-        $pdf->SetXY(35, 8);
+        $pdf->SetXY(35, 9.77);
         $pdf->Cell(50, 0, 'ISSUED DATE ' . $request->get('issue_date'), 0, 0, 'R');
 
-        $pdf->SetXY(35, 12);
+        $pdf->SetXY(35, 13.25);
         $pdf->Cell(50, 0, 'VALID TILL ' . $request->get('expiry_date'), 0, 0, 'R');
 
-        $pdf->SetXY(35, 16);
+        $pdf->SetXY(35, 16.8);
         $pdf->Cell(50, 0, 'SINCE ' . $request->get('revalidation_date'), 0, 0, 'R');
 
 
@@ -176,145 +176,52 @@ class StudentsController extends Controller
         $pdf->AddPage("L", array($specs['width'], $specs['height']));
         $pdf->useTemplate($tplIdx);
 
-        $pdf->SetXY(1.8, 18);
-        $pdf->SetFont('Helvetica', '', 4.5);
-        $pdf->SetTextColor(34, 75, 155);
-        $pdf->Write(0, 'REGISTRY OF SAILING COMPETENCY');
+//        $pdf->SetXY(1.8, 18);
+//        $pdf->SetFont('Helvetica', '', 4.5);
+//        $pdf->SetTextColor(34, 75, 155);
+//        $pdf->Write(0, 'REGISTRY OF SAILING COMPETENCY');
 
-        $pdf->SetXY(1.8, 22);
+        $pdf->SetXY(4.03, 24.9);
         $pdf->SetTextColor(0, 0, 0);
-        $pdf->SetFont('Helvetica', '', 6.5);
+        $pdf->SetFont('Helvetica', '', 7);
         $pdf->Write(0, 'This is to certify that');
 
-        $pdf->SetXY(1.8, 27);
+        $pdf->SetXY(4.03, 29.8);
         $pdf->SetTextColor(0, 0, 0);
-        $pdf->SetFont('Helvetica-Bold', '', 12.5);
+        $pdf->SetFont('Helvetica-Bold', '', 13);
         $pdf->Write(0, strtoupper($request->get('full_name') . ' ' . $request->get('certificate_code')));
 
-        $pdf->SetXY(1.8, 32);
+        $pdf->SetXY(4.03, 35.35);
         $pdf->SetTextColor(0, 0, 0);
-        $pdf->SetFont('Helvetica', '', 6.5);
-        $pdf->MultiCell(70, 2.5, $request->get('description'), 0, 'L');
+        $pdf->SetFont('Helvetica', '', 7);
+        $pdf->MultiCell(70, 2.7, $request->get('description'), 0, 'L');
 
         if( file_put_contents($qr,$image)!==false ) {
-            $pdf->SetXY(2, 18);
-            $pdf->Image($qr, 63, 2, 20, 20, 'png');
+            $pdf->Image($qr, 65.3, 5, 19.1, 19.1, 'png');
             unlink($qr);
         }
+        $pdf->SetDisplayMode('fullwidth');
+        $pdf->SetCompression(false);
 
-        $pdf->Output($request->get('send'), 'certificate.pdf', true);
+        $pdf->Close();
+
+
+        if (in_array($request->get('send'), ['D', 'I']))
+            $pdf->Output($request->get('send'), 'certificate.pdf', true);
+
+        else {
+            $imagick = new Imagick();
+            $epsFile = public_path('eps/certificate.eps');
+            file_put_contents($epsFile, $pdf->Output('S', 'certificate.pdf', true));
+
+            $imagick->readImage($epsFile);
+
+            $saveImagePath = $epsFile;
+            $imagick->setImageCompressionQuality(100);
+            $imagick->setimageformat('eps');
+            $imagick->writeImages($saveImagePath, false);
+
+            return response()->download($saveImagePath);
+        }
     }
-
-
-
-//    public function getCertificate(UserCertificate $certificate) {
-//        $imgFront = Image::make(resource_path() . '/img/certificate/front.png');
-//        $imgBack = Image::make(resource_path() . '/img/certificate/back.png');
-//
-//        $userPhoto = Image::make($certificate->user->img_src);
-//        $userPhoto->resize(178, 178, function ($constraint) {
-//            $constraint->aspectRatio();
-//        });
-//        $imgFront->insert($userPhoto, '', 19, 124);
-//
-//
-//        $userPhoto->resize(75, 69, function ($constraint) {
-//            $constraint->aspectRatio();
-//        });
-//        $imgFront->insert($userPhoto, '', 427, 240);
-//
-//        // Near head photo
-//        $imgFront->text(strtoupper($certificate->user->full_name), 180, 160, function($font) {
-//            $font->file(resource_path() . '/fonts/certificates/helvetica_bold.otf');
-//            $font->size(25);
-//            $font->color([255, 255, 255, 1]);
-//        });
-//
-//        $imgFront->text(strtoupper($certificate->user->full_name), 180, 210, function($font) {
-//            $font->file(resource_path() . '/fonts/certificates/helvetica_regular.otf');
-//            $font->size(20);
-//            $font->color([255, 255, 255, 1]);
-//        });
-//
-//        $imgFront->text('DOB: ' . strtoupper($certificate->user->birthday), 180, 260, function($font) {
-//            $font->file(resource_path() . '/fonts/certificates/helvetica_regular.otf');
-//            $font->size(20);
-//            $font->color([255, 255, 255, 1]);
-//        });
-//
-//        // top right
-//        $imgFront->text('CERT № SRC ' . $certificate->certificate_number, 490, 52, function ($font) {
-//            $font->file(resource_path() . '/fonts/certificates/helvetica_regular.otf');
-//            $font->size(15);
-//            $font->color([255, 255, 255, 1]);
-//            $font->align('right');
-//        });
-//
-//        $imgFront->text('ISSUED DATE ' . $certificate->issue_date, 490, 77, function ($font) {
-//            $font->file(resource_path() . '/fonts/certificates/helvetica_regular.otf');
-//            $font->size(15);
-//            $font->color([255, 255, 255, 1]);
-//            $font->align('right');
-//        });
-//
-//        $imgFront->text('VALID TILL ' . $certificate->expiry_date, 490, 102, function ($font) {
-//            $font->file(resource_path() . '/fonts/certificates/helvetica_regular.otf');
-//            $font->size(15);
-//            $font->color([255, 255, 255, 1]);
-//            $font->align('right');
-//        });
-//
-//        if ($certificate->revalidation_date) {
-//            $imgFront->text('SINCE ' . $certificate->revalidation_date, 490, 127, function ($font) {
-//                $font->file(resource_path() . '/fonts/certificates/helvetica_regular.otf');
-//                $font->size(15);
-//                $font->color([255, 255, 255, 1]);
-//                $font->align('right');
-//            });
-//        }
-//
-//
-//        $imgBack->text('This is to certify that', 15, 140, function ($font) {
-//            $font->file(resource_path() . '/fonts/certificates/helvetica_regular.otf');
-//            $font->size(14);
-//        });
-//
-//        $imgBack->text(strtoupper($certificate->user->full_name), 13, 170, function ($font) {
-//            $font->file(resource_path() . '/fonts/certificates/helvetica_bold.otf');
-//            $font->size(20);
-//        });
-//
-//        $imgBack->text("adsasd asd jklkjkljklj asdljklkjlk lkjlkjlk askldjlkj askljdkljasl \n lkasjd", 13, 210, function ($font) {
-//            $font->file(resource_path() . '/fonts/certificates/helvetica_regular.otf');
-//            $font->size(13);
-//        });
-//
-//        $image = QrCode::size(120)
-//            ->format('png')
-//            ->generate('dasdasd asd sad asd adsasdasd asd asd as dasdas ');
-//
-//        $qr = Image::make(base64_encode($image));
-//
-//        $imgBack->insert($qr, 'top-left', 370, 15);
-//
-//
-//        return $imgBack->response('png', 100);
-//
-//
-//        $path = time() . '/';
-//        File::makeDirectory(storage_path('images/') . $path, 0755, true, true);
-//
-//        $img->save(storage_path('images/') . $path . 'front.png', 100, 'png');
-//
-//        $frontImage = $img->basename;
-//
-//        $zip = new ZipArchive();
-//        $zip_file = 'certificates.zip';
-//        $zip->open($zip_file, ZipArchive::CREATE | ZipArchive::OVERWRITE);
-//        $zip->addFile(storage_path('images/' . $path . $frontImage), $frontImage);
-//        $zip->close();
-//        File::deleteDirectory(storage_path('images/' . $path));
-//
-//        return response()->download($zip_file);
-//    }
 }

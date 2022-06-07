@@ -38,3 +38,6 @@ Route::group(['prefix' => 'student', 'as' => 'student.'], function () {
     Route::post('/certificate/get/{user}', [StudentsController::class, 'toPdf'])->middleware(['middleware' => 'role:super-admin'])->name('get_certificate');
 });
 
+Route::group(['prefix' => 'admin', 'as' => 'admin.'], function() {
+
+});

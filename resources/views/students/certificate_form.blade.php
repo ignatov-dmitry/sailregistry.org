@@ -43,7 +43,8 @@
                 <textarea id="description" name="description" class="form-control">{{ $description }}</textarea>
             </div>
             <button name="send" value="I" class="btn btn-outline-success">Просмотр</button>
-            <button name="send" value="D"  class="btn btn-outline-success">Скачать</button>
+            <button name="send" value="D"  class="btn btn-outline-success">Скачать PDF</button>
+            <button name="send" value="EPS"  class="btn btn-outline-success">Скачать EPS</button>
         </form>
     </div>
 @endsection

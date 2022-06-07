@@ -20,6 +20,6 @@ class RoleMiddleware
         if(auth()->check() && auth()->user()->hasRole($role))
             return $next($request);
         else
-            abort(404);
+            return response()->redirectToRoute('login');
     }
 }
