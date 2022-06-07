@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "be7bc28f96a655722a3493fe4a8fb819",
+    "content-hash": "6c7bed1d3dd4c6370e57867a14487c46",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -59,6 +59,50 @@
                 "source": "https://github.com/Bacon/BaconQrCode/tree/2.0.7"
             },
             "time": "2022-03-14T02:02:36+00:00"
+        },
+        {
+            "name": "baraja-core/php-pdf-to-image",
+            "version": "v1.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/baraja-core/php-pdf-to-image.git",
+                "reference": "ad35f22c200d5796a3d8acd142697bd31811f26e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/baraja-core/php-pdf-to-image/zipball/ad35f22c200d5796a3d8acd142697bd31811f26e",
+                "reference": "ad35f22c200d5796a3d8acd142697bd31811f26e",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.4 || ^8.0"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^0.12.74",
+                "phpstan/phpstan-nette": "^0.12.14",
+                "roave/security-advisories": "dev-master",
+                "tracy/tracy": "^2.8"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "Jan Barášek",
+                    "homepage": "https://baraja.cz"
+                }
+            ],
+            "description": "Convert PDF to JPG, PNG or GIF in PHP.",
+            "homepage": "https://github.com/baraja-core/php-pdf-to-image",
+            "support": {
+                "issues": "https://github.com/baraja-core/php-pdf-to-image/issues",
+                "source": "https://github.com/baraja-core/php-pdf-to-image/tree/v1.3.0"
+            },
+            "time": "2021-02-09T09:20:56+00:00"
         },
         {
             "name": "brick/math",
@@ -9535,6 +9579,8 @@
     "platform": {
         "php": "^8.0.2",
         "ext-curl": "*",
+        "ext-imagick": "*",
+        "ext-openssl": "*",
         "ext-zip": "*"
     },
     "platform-dev": [],

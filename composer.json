@@ -7,6 +7,8 @@
     "require": {
         "php": "^8.0.2",
         "ext-curl": "*",
+        "ext-imagick": "*",
+        "ext-openssl": "*",
         "ext-zip": "*",
         "doctrine/dbal": "^3.3",
         "guzzlehttp/guzzle": "^7.2",
@@ -20,9 +22,7 @@
         "setasign/fpdf": "1.8",
         "setasign/fpdi": "^2.3",
         "setasign/tfpdf": "1.31.*",
-        "simplesoftwareio/simple-qrcode": "^4.2",
-        "ext-imagick": "*",
-        "ext-openssl": "*"
+        "simplesoftwareio/simple-qrcode": "^4.2"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.6",

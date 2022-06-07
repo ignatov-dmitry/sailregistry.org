@@ -1,5 +1,10 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\CertificateController;
+use App\Http\Controllers\Admin\CountryController;
+use App\Http\Controllers\Admin\SchoolController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\LegacyController;
 use App\Http\Controllers\StudentsController;
 use Illuminate\Support\Facades\Route;
@@ -38,6 +43,45 @@ Route::group(['prefix' => 'student', 'as' => 'student.'], function () {
     Route::post('/certificate/get/{user}', [StudentsController::class, 'toPdf'])->middleware(['middleware' => 'role:super-admin'])->name('get_certificate');
 });
 
-Route::group(['prefix' => 'admin', 'as' => 'admin.'], function() {
+Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth']], function() {
+    Route::get('/', [AdminController::class, 'index'])->name('admin');
 
+    Route::group(['prefix' => 'certificates', 'as' => 'certificates.'], function () {
+        Route::get('/', [CertificateController::class, 'index'])->name('certificates');
+        Route::get('/certificate/create', [CertificateController::class, 'create'])->name('create');
+        Route::post('/certificate/store', [CertificateController::class, 'store'])->name('store');
+        Route::get('/certificate/edit/{certificateType}', [CertificateController::class, 'edit'])->name('edit');
+        Route::post('/certificate/update/{certificateType}', [CertificateController::class, 'update'])->name('update');
+        Route::delete('/certificate/edit', [CertificateController::class, 'destroy'])->name('destroy');
+    });
+
+    Route::group(['prefix' => 'schools', 'as' => 'schools.'], function () {
+        Route::get('/', [SchoolController::class, 'index'])->name('schools');
+        Route::get('/school/create', [SchoolController::class, 'create'])->name('create');
+        Route::post('/school/store', [SchoolController::class, 'store'])->name('store');
+        Route::get('/school/show/{id}', [SchoolController::class, 'show'])->name('show');
+        Route::get('/school/edit/{id}', [SchoolController::class, 'edit'])->name('edit');
+        Route::post('/school/update', [SchoolController::class, 'update'])->name('update');
+        Route::delete('/school/edit', [SchoolController::class, 'destroy'])->name('destroy');
+    });
+
+    Route::group(['prefix' => 'countries', 'as' => 'countries.'], function () {
+        Route::get('/', [CountryController::class, 'index'])->name('countries');
+        Route::get('/country/create', [CountryController::class, 'create'])->name('create');
+        Route::post('/country/store', [CountryController::class, 'store'])->name('store');
+        Route::get('/country/show/{id}', [CountryController::class, 'show'])->name('show');
+        Route::get('/country/edit/{id}', [CountryController::class, 'edit'])->name('edit');
+        Route::post('/country/update', [CountryController::class, 'update'])->name('update');
+        Route::delete('/country/edit', [CountryController::class, 'destroy'])->name('destroy');
+    });
+
+    Route::group(['prefix' => 'users', 'as' => 'users.'], function () {
+        Route::get('/', [UserController::class, 'index'])->name('users');
+        Route::get('/user/create', [UserController::class, 'create'])->name('create');
+        Route::post('/user/store', [UserController::class, 'store'])->name('store');
+        Route::get('/user/show/{id}', [UserController::class, 'show'])->name('show');
+        Route::get('/user/edit/{id}', [UserController::class, 'edit'])->name('edit');
+        Route::post('/user/update', [UserController::class, 'update'])->name('update');
+        Route::delete('/user/edit', [UserController::class, 'destroy'])->name('destroy');
+    });
 });

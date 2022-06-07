@@ -206,12 +206,14 @@ class StudentsController extends Controller
         $pdf->Close();
 
 
-        if (in_array($request->get('send'), ['D', 'I']))
+        if (in_array($request->get('send'), ['I']))
             $pdf->Output($request->get('send'), 'certificate.pdf', true);
 
         else {
             $imagick = new Imagick();
-            $epsFile = public_path('eps/certificate.eps');
+            $epsFile = public_path('temp/certificate.eps');
+            $pdfFile = public_path('cert.pdf');
+
             file_put_contents($epsFile, $pdf->Output('S', 'certificate.pdf', true));
 
             $imagick->readImage($epsFile);
@@ -221,7 +223,9 @@ class StudentsController extends Controller
             $imagick->setimageformat('eps');
             $imagick->writeImages($saveImagePath, false);
 
-            return response()->download($saveImagePath);
+            $pdf = public_path('cert.pdf');
+            exec('convert -density 600x600 ' . $epsFile . ' ' . $pdfFile);
+            return response()->download($pdf);
         }
     }
 }
