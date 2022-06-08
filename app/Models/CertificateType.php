@@ -43,6 +43,12 @@ class CertificateType extends Model
         'id',
     ];
 
+    protected $guarded = [
+        '_token'
+    ];
+
+    public $timestamps = false;
+
     public function parent() {
         return $this->hasOne(self::class, 'id', 'certificate_type_parent_id');
     }

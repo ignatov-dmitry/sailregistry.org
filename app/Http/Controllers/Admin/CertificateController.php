@@ -3,54 +3,54 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreCertificateTypeRequest;
+use App\Http\Requests\UpdateCertificateTypeRequest;
 use App\Models\CertificateType;
 use Illuminate\Http\Request;
 
 class CertificateController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $certificates = CertificateType::paginate(20);
+        $likeStr = '%' . $request->get('search') . '%';
+        if ($request->get('search')) {
+            $certificates = CertificateType::where('name', 'like', $likeStr)
+                ->orWhere('code', 'like', $likeStr)
+                ->paginate(20);
+        }
+
+        else
+            $certificates = CertificateType::paginate(20);
+
         return view('admin.certificate.index', compact('certificates'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+
+    public function create(CertificateType $certificateType)
     {
-        //
+        $certificates = CertificateType::all();
+        return view('admin.certificate.show', compact('certificateType', 'certificates'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+
+    public function store(StoreCertificateTypeRequest $request)
     {
-        //
+        $certificateType = CertificateType::create($request->toArray());
+        return response()->redirectToRoute('admin.certificates.edit', $certificateType);
     }
 
 
     public function edit(CertificateType $certificateType)
     {
-        return view('admin.certificate.show', compact('certificateType'));
+        $certificates = CertificateType::all();
+        return view('admin.certificate.show', compact('certificateType', 'certificates'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\CertificateType  $certificateType
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, CertificateType $certificateType)
+
+    public function update(UpdateCertificateTypeRequest $request, CertificateType $certificateType)
     {
-        //
+        $certificateType->update($request->toArray());
+        return response()->redirectToRoute('admin.certificates.edit', $certificateType);
     }
 
     /**

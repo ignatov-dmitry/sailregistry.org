@@ -10,14 +10,14 @@
     <title>@yield('title')</title>
 
     <!-- Scripts -->
-    <script src="{{ mix('js/app.js') }}" defer></script>
+    <script src="{{ mix('js/admin.js') }}" defer></script>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
 
     <!-- Styles -->
-    <link href="{{ mix('css/app.css') }}" rel="stylesheet">
+    <link href="{{ mix('css/admin.css') }}" rel="stylesheet">
 </head>
     <body class="hold-transition sidebar-mini">
         <div class="wrapper">
@@ -53,25 +53,25 @@
                     <nav class="mt-2">
                         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                             <li class="nav-item">
-                                <a href="{{ route('admin.certificates.certificates') }}" class="nav-link {{ Route::is('admin.certificates.certificates') ? 'active' : '' }}">
+                                <a href="{{ route('admin.certificates.certificates') }}" class="nav-link {{ Route::is('admin.certificates.*') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-tachometer-alt"></i>
                                     <p>Типы сертификатов</p>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="{{ route('admin.schools.schools') }}" class="nav-link {{ Route::is('admin.schools.schools') ? 'active' : '' }}">
+                                <a href="{{ route('admin.schools.schools') }}" class="nav-link {{ Route::is('admin.schools.*') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-tachometer-alt"></i>
                                     <p>Школы</p>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="{{ route('admin.countries.countries') }}" class="nav-link {{ Route::is('admin.countries.countries') ? 'active' : '' }}">
+                                <a href="{{ route('admin.countries.countries') }}" class="nav-link {{ Route::is('admin.countries.*') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-tachometer-alt"></i>
                                     <p>Страны</p>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="{{ route('admin.users.users') }}" class="nav-link {{ Route::is('admin.users.users') ? 'active' : '' }}">
+                                <a href="{{ route('admin.users.users') }}" class="nav-link {{ Route::is('admin.users.*') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-tachometer-alt"></i>
                                     <p>Список пользователей</p>
                                 </a>

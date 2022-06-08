@@ -7,13 +7,12 @@
         <div class="card">
             <div class="card-header">
                 <h3 class="card-title">Типы сертификатов</h3>
-                <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                        <i class="fas fa-minus"></i>
-                    </button>
-                    <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
-                        <i class="fas fa-times"></i>
-                    </button>
+                <div class="card-tools flex">
+                    <a href="{{ route('admin.certificates.create') }}" class="btn btn-link">Добавить сертификат</a>
+                    <form method="get" class="flex">
+                        <input type="text" class="form-control search" value="{{ request('search') }}" placeholder="Поиск" name="search">
+                        <button type="submit" class="btn btn-default">Искать</button>
+                    </form>
                 </div>
             </div>
             <div class="card-body">
@@ -35,7 +34,7 @@
                             <td>{{ $certificate->id }}</td>
                             <td>{{ $certificate->name }}</td>
                             <td>{{ $certificate->code }}</td>
-                            <td>{{ isset($certificate->parent->name) ? $certificate->parent->name : '-' }}</td>
+                            <td>{{ @$certificate->parent->name }}</td>
                             <td>{{ $certificate->priority }}</td>
                             <td>{{ $certificate->group }}</td>
                             <td>
