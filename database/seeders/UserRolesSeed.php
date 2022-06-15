@@ -16,8 +16,10 @@ class UserRolesSeed extends Seeder
     public function run()
     {
         $user_roles = DB::table('users as u')
-            ->select(['u.id as user_id', 'r.id as role_id'])
-            ->leftJoin('roles as r', 'u.role', '=', 'r.slug')
+            ->distinct()
+            ->select(['u.id as user_id', 'r.id as role_id', 'uc.school_id'])
+            ->leftJoin('roles as r', DB::raw('REPLACE(u.role, \'_\', \'-\')'), '=', DB::raw('REPLACE(r.slug, \'_\', \'-\')'))
+            ->leftJoin('user_certificates as uc', 'uc.user_id', '=', 'u.id')
             ->get()
             ->toArray();
 
@@ -26,8 +28,9 @@ class UserRolesSeed extends Seeder
 
         foreach ($user_roles as $item) {
             $roles[] = array(
-                'user_id' => $item->user_id,
-                'role_id' => $item->role_id
+                'user_id'   => $item->user_id,
+                'role_id'   => $item->role_id,
+                'school_id' => $item->school_id
             );
 
             if ($iteration < 500)

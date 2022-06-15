@@ -44,4 +44,19 @@ use Illuminate\Database\Eloquent\Model;
 class School extends Model
 {
     use HasFactory;
+
+    protected $guarded = [
+        '_token'
+    ];
+
+    public $timestamps = false;
+
+    public const LOGO_PATH = 'images/logo/schools';
+
+    public function schoolAdmin() {
+        return $this->hasMany(UserRole::class, 'school_id');
+    }
+    public function country() {
+        return $this->hasOne(Country::class, 'id', 'country_id');
+    }
 }

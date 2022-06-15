@@ -31,6 +31,7 @@ return new class extends Migration
             $table->text('img_src')->nullable()->after('full_name');
             $table->index('old_id');
             $table->index('wp_user_id');
+            $table->index('user_login');
         });
     }
 

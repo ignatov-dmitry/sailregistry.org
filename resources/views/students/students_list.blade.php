@@ -34,7 +34,6 @@
                 <th scope="col">Old ID</th>
                 <th scope="col">ФИО</th>
                 <th scope="col">Дата рождения</th>
-                <th scope="col">Школы</th>
                 <th scope="col"></th>
             </tr>
             </thead>
@@ -45,7 +44,6 @@
                     <th scope="row">{{ $student->old_id }}</th>
                     <td>{{ $student->full_name }}</td>
                     <td>{{ $student->birthday }}</td>
-                    <td>{{ $student->school_names }}</td>
                     <td><a href="{{ route('student.student', $student->hash) }}">Перейти</a></td>
                 </tr>
             @endforeach

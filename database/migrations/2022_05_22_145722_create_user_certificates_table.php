@@ -26,6 +26,12 @@ return new class extends Migration
             $table->date('issue_date')->nullable();
             $table->date('expiry_date')->nullable();
             $table->date('revalidation_date')->nullable();
+            $table->index('id');
+            $table->index('user_id');
+            $table->index('instructor_id');
+            $table->index('issue_date');
+            $table->index('expiry_date');
+            $table->index('revalidation_date');
         });
     }
 

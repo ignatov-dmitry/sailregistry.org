@@ -33,12 +33,11 @@ class StudentsController extends Controller
                 'users.birthday',
                 'r.name',
                 'r.slug',
-                DB::raw('GROUP_CONCAT(s.name SEPARATOR \', \') as school_names')
+                //DB::raw('GROUP_CONCAT(s.name SEPARATOR \', \') as school_names')
             ])
             ->leftJoin('user_roles as ur', 'users.id', '=', 'ur.user_id')
             ->leftJoin('roles as r', 'r.id', '=', 'ur.role_id')
-            ->leftJoin('user_schools as us', 'us.user_id', 'users.id')
-            ->leftJoin('schools as s', 's.id', '=', 'us.school_id')
+            ->leftJoin('schools as s', 's.id', '=', 'ur.school_id')
             ->leftJoin('user_certificates as uc', 'uc.user_id', '=', 'users.id')
             ->where('r.slug', '=', Role::BASIC_CONTRIBUTOR)
             ->whereIn('s.name', $selected_schools)
@@ -47,6 +46,7 @@ class StudentsController extends Controller
             ->orderBy('s.name')
             ->orderBy('users.full_name')
             ->paginate(30);
+
         $total = $students->total();
         return view('students.students_list', compact('students', 'total', 'russian_schools'));
     }
@@ -128,16 +128,11 @@ class StudentsController extends Controller
         $pdf->AddPage("L", array($specs['width'], $specs['height']));
         $pdf->useTemplate($tplIdx);
 
-//        $pdf->SetXY(4.5, 20);
-//        $pdf->SetFont('Helvetica', '', 4.5);
-//        $pdf->SetTextColor(255, 255, 255);
-//        $pdf->Write(0, 'REGISTRY OF SAILING COMPETENCY');
-
         $profilePhoto = 'profile.jpg';
         if ($user->img_src) {
             $userPhoto = Image::make($user->img_src);
             file_put_contents($profilePhoto,$userPhoto->encode('jpg')); {
-                $pdf->Image($profilePhoto, 5.5, 22.97, 25.5);
+                $pdf->Image($profilePhoto, 7.7, 22.97, 25.5);
                 unlink($profilePhoto);
             }
         }
@@ -146,24 +141,24 @@ class StudentsController extends Controller
 
         $pdf->SetFont('Helvetica-Bold', '', 12);
         $pdf->SetTextColor(255, 255, 255);
-        $pdf->Text(31.8, 28.7, strtoupper($request->get('full_name')));
+        $pdf->Text(34.0, 28.7, strtoupper($request->get('full_name')));
 
         $pdf->SetFont('Helvetica', '', 9);
-        $pdf->SetXY(31.3, 32.8);
+        $pdf->SetXY(33.5, 32.8);
         $pdf->MultiCell(65, 4, strtoupper($request->get('certificate_name') . ' ' . $request->get('certificate_code')), null, 'L');
-        $pdf->Text(32.55, 42.8, 'DOB: ' . date_format(date_create($request->get('birthday')), 'd.m.Y'));
+        $pdf->Text(34.75, 42.8, 'DOB: ' . date_format(date_create($request->get('birthday')), 'd.m.Y'));
 
         $pdf->SetFont('Helvetica', '', 8);
-        $pdf->SetXY(35, 6.2);
+        $pdf->SetXY(37.2, 6.2);
         $pdf->Cell(50, 0, 'CERT № ' . $request->get('certificate_code') . ' - ' . $request->get('certificate_number'), 0, 0, 'R');
 
-        $pdf->SetXY(35, 9.77);
+        $pdf->SetXY(37.2, 9.77);
         $pdf->Cell(50, 0, 'ISSUED DATE ' . $request->get('issue_date'), 0, 0, 'R');
 
-        $pdf->SetXY(35, 13.25);
+        $pdf->SetXY(37.2, 13.25);
         $pdf->Cell(50, 0, 'VALID TILL ' . $request->get('expiry_date'), 0, 0, 'R');
 
-        $pdf->SetXY(35, 16.8);
+        $pdf->SetXY(37.2, 16.8);
         $pdf->Cell(50, 0, 'SINCE ' . $request->get('revalidation_date'), 0, 0, 'R');
 
 
@@ -176,22 +171,18 @@ class StudentsController extends Controller
         $pdf->AddPage("L", array($specs['width'], $specs['height']));
         $pdf->useTemplate($tplIdx);
 
-//        $pdf->SetXY(1.8, 18);
-//        $pdf->SetFont('Helvetica', '', 4.5);
-//        $pdf->SetTextColor(34, 75, 155);
-//        $pdf->Write(0, 'REGISTRY OF SAILING COMPETENCY');
 
-        $pdf->SetXY(4.03, 24.9);
+        $pdf->SetXY(6.45, 24.9);
         $pdf->SetTextColor(0, 0, 0);
         $pdf->SetFont('Helvetica', '', 7);
         $pdf->Write(0, 'This is to certify that');
 
-        $pdf->SetXY(4.03, 29.8);
+        $pdf->SetXY(6.45, 29.8);
         $pdf->SetTextColor(0, 0, 0);
         $pdf->SetFont('Helvetica-Bold', '', 13);
         $pdf->Write(0, strtoupper($request->get('full_name') . ' ' . $request->get('certificate_code')));
 
-        $pdf->SetXY(4.03, 35.35);
+        $pdf->SetXY(6.45, 35.35);
         $pdf->SetTextColor(0, 0, 0);
         $pdf->SetFont('Helvetica', '', 7);
         $pdf->MultiCell(70, 2.7, $request->get('description'), 0, 'L');
@@ -210,21 +201,16 @@ class StudentsController extends Controller
             $pdf->Output($request->get('send'), 'certificate.pdf', true);
 
         else {
-            $imagick = new Imagick();
             $epsFile = public_path('temp/certificate.eps');
             $pdfFile = public_path('cert.pdf');
 
             file_put_contents($epsFile, $pdf->Output('S', 'certificate.pdf', true));
 
-            $imagick->readImage($epsFile);
-
-            $saveImagePath = $epsFile;
-            $imagick->setImageCompressionQuality(100);
-            $imagick->setimageformat('eps');
-            $imagick->writeImages($saveImagePath, false);
-
             $pdf = public_path('cert.pdf');
             exec('convert -density 600x600 ' . $epsFile . ' ' . $pdfFile);
+            unlink($epsFile);
+
+
             return response()->download($pdf);
         }
     }

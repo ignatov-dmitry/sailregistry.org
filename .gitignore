@@ -1,11 +1,13 @@
 /node_modules
 /public/hot
 /public/storage
+/public/images/logo
 /public/images/photos
 /public/css
 /public/js
 /public/eps
 /public/temp
+/public/*.pdf
 /storage/*.key
 /vendor
 .env

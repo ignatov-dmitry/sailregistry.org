@@ -78,4 +78,12 @@ class UserController extends Controller
     {
         //
     }
+
+    public function getUsersByUserLogin(Request $request) {
+        $users = User::select(['id', 'user_login'])
+            ->where('user_login', 'like', $request->get('user_login') . '%')
+            ->get();
+
+        return response()->json($users);
+    }
 }

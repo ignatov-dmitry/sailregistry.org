@@ -28,6 +28,7 @@ return new class extends Migration
             $table->string('logo')->nullable();
             $table->text('description')->nullable();
             $table->boolean('is_active')->default(0);
+            $table->index('id');
             $table->index('name');
         });
     }

@@ -58,7 +58,7 @@
                     @endforeach
                     </tbody>
                 </table>
-                {{$certificates->links()}}
+                {{$certificates->appends(request()->all())->links()}}
             </div>
         </div>
     </section>

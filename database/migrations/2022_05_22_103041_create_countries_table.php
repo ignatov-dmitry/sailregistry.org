@@ -17,6 +17,8 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->boolean('is_active')->default(0);
+            $table->index('id');
+            $table->index('name');
         });
     }
 

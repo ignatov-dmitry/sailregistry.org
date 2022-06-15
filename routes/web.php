@@ -59,9 +59,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth']], 
         Route::get('/', [SchoolController::class, 'index'])->name('schools');
         Route::get('/school/create', [SchoolController::class, 'create'])->name('create');
         Route::post('/school/store', [SchoolController::class, 'store'])->name('store');
-        Route::get('/school/show/{id}', [SchoolController::class, 'show'])->name('show');
-        Route::get('/school/edit/{id}', [SchoolController::class, 'edit'])->name('edit');
-        Route::post('/school/update', [SchoolController::class, 'update'])->name('update');
+        Route::get('/school/edit/{school}', [SchoolController::class, 'edit'])->name('edit');
+        Route::post('/school/update/{school}', [SchoolController::class, 'update'])->name('update');
         Route::delete('/school/edit', [SchoolController::class, 'destroy'])->name('destroy');
     });
 
@@ -69,7 +68,6 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth']], 
         Route::get('/', [CountryController::class, 'index'])->name('countries');
         Route::get('/country/create', [CountryController::class, 'create'])->name('create');
         Route::post('/country/store', [CountryController::class, 'store'])->name('store');
-        Route::get('/country/show/{id}', [CountryController::class, 'show'])->name('show');
         Route::get('/country/edit/{id}', [CountryController::class, 'edit'])->name('edit');
         Route::post('/country/update', [CountryController::class, 'update'])->name('update');
         Route::delete('/country/edit', [CountryController::class, 'destroy'])->name('destroy');
@@ -79,9 +77,9 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth']], 
         Route::get('/', [UserController::class, 'index'])->name('users');
         Route::get('/user/create', [UserController::class, 'create'])->name('create');
         Route::post('/user/store', [UserController::class, 'store'])->name('store');
-        Route::get('/user/show/{id}', [UserController::class, 'show'])->name('show');
         Route::get('/user/edit/{id}', [UserController::class, 'edit'])->name('edit');
         Route::post('/user/update', [UserController::class, 'update'])->name('update');
         Route::delete('/user/edit', [UserController::class, 'destroy'])->name('destroy');
+        Route::get('/ajax/get_users_by_user_login', [UserController::class, 'getUsersByUserLogin']);
     });
 });

@@ -22,7 +22,7 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             UserCertificateSeeder::class,
             UserRolesSeed::class,
-            UserSchoolsSeeder::class
+            //UserSchoolsSeeder::class
         ]);
         // \App\Models\User::factory(10)->create();
 
