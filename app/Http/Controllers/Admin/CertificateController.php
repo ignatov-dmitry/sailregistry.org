@@ -53,12 +53,7 @@ class CertificateController extends Controller
         return response()->redirectToRoute('admin.certificates.edit', $certificateType);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\CertificateType  $certificateType
-     * @return \Illuminate\Http\Response
-     */
+
     public function destroy(CertificateType $certificateType)
     {
         //

@@ -13,9 +13,18 @@ use Illuminate\Http\Request;
 
 class SchoolController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $schools = School::paginate(20);
+        $likeStr = '%' . $request->get('search') . '%';
+        if ($request->get('search')) {
+            $schools = School::where('name', 'like', $likeStr)
+                ->orWhere('name_rus', 'like', $likeStr)
+                ->paginate(20);
+        }
+
+        else
+            $schools = School::paginate(20);
+
         return view('admin.school.index', compact('schools'));
     }
 
@@ -89,12 +98,6 @@ class SchoolController extends Controller
         return response()->redirectToRoute('admin.schools.edit', $school);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\School  $school
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(School $school)
     {
         //

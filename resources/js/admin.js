@@ -1,21 +1,16 @@
+require('selectize');
+require('jquery-mask-plugin');
+require('admin-lte/dist/js/adminlte')
+window.bsCustomFileInput = require('admin-lte/plugins/bs-custom-file-input/bs-custom-file-input');
+require('./bootstrap');
 import $ from 'jquery';
 window.$ = window.jQuery = $;
-require('selectize');
-require('admin-lte/dist/js/adminlte')
-require('jquery-mask-plugin');
-window.bsCustomFileInput = require('admin-lte/plugins/bs-custom-file-input/bs-custom-file-input');
 
 $(document).ready(function (){
-    $('#certificate_type_parent_id').selectize({
-        placeholder: 'Родительский сертификат',
-    });
-    $('#country_id').selectize({
-        placeholder: 'Страна',
-    });
+    $('#certificate_type_parent_id').selectize({placeholder: 'Родительский сертификат'});
+    $('#country_id').selectize({placeholder: 'Страна'});
 
-    let school_admin = $('#admin_id').selectize({
-        placeholder: 'Введите логин'
-    });
+    let school_admin = $('#admin_id').selectize({placeholder: 'Введите логин'});
 
     $('#is_active').selectize({
         placeholder: 'Активация'

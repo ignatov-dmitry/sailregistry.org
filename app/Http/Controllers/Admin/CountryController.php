@@ -3,79 +3,62 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CountryRequest;
 use App\Models\Country;
 use Illuminate\Http\Request;
 
 class CountryController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return view('admin.country.index');
+        $likeStr = '%' . $request->get('search') . '%';
+        if ($request->get('search')) {
+            $countries = Country::where('name', 'like', $likeStr)
+                ->paginate(20);
+        }
+
+        else
+            $countries = Country::paginate(20);
+        return view('admin.country.index', compact('countries'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+
+    public function create(Country $country)
     {
-        //
+        return view('admin.country.show', compact('country'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+
+    public function store(CountryRequest $request)
     {
-        //
+        $country = Country::create($request->toArray());
+        return response()->redirectToRoute('admin.countries.edit', $country);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Country  $country
-     * @return \Illuminate\Http\Response
-     */
+
     public function show(Country $country)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Country  $country
-     * @return \Illuminate\Http\Response
-     */
+
     public function edit(Country $country)
     {
-        //
+        return view('admin.country.show', compact('country'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Country  $country
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Country $country)
+
+    public function update(CountryRequest $request, Country $country)
     {
-        //
+        $country->update($request->toArray());
+        return response()->redirectToRoute('admin.countries.edit', $country);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Country  $country
-     * @return \Illuminate\Http\Response
-     */
+
     public function destroy(Country $country)
     {
-        //
+        $country->is_active = false;
+        $country->save();
+        return response()->redirectToRoute('admin.countries.countries');
     }
 }

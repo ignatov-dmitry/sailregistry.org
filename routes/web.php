@@ -68,17 +68,17 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth']], 
         Route::get('/', [CountryController::class, 'index'])->name('countries');
         Route::get('/country/create', [CountryController::class, 'create'])->name('create');
         Route::post('/country/store', [CountryController::class, 'store'])->name('store');
-        Route::get('/country/edit/{id}', [CountryController::class, 'edit'])->name('edit');
-        Route::post('/country/update', [CountryController::class, 'update'])->name('update');
-        Route::delete('/country/edit', [CountryController::class, 'destroy'])->name('destroy');
+        Route::get('/country/edit/{country}', [CountryController::class, 'edit'])->name('edit');
+        Route::post('/country/update/{country}', [CountryController::class, 'update'])->name('update');
+        Route::delete('/country/destroy/{country}', [CountryController::class, 'destroy'])->name('destroy');
     });
 
     Route::group(['prefix' => 'users', 'as' => 'users.'], function () {
         Route::get('/', [UserController::class, 'index'])->name('users');
         Route::get('/user/create', [UserController::class, 'create'])->name('create');
         Route::post('/user/store', [UserController::class, 'store'])->name('store');
-        Route::get('/user/edit/{id}', [UserController::class, 'edit'])->name('edit');
-        Route::post('/user/update', [UserController::class, 'update'])->name('update');
+        Route::get('/user/edit/{user}', [UserController::class, 'edit'])->name('edit');
+        Route::post('/user/update/{user}', [UserController::class, 'update'])->name('update');
         Route::delete('/user/edit', [UserController::class, 'destroy'])->name('destroy');
         Route::get('/ajax/get_users_by_user_login', [UserController::class, 'getUsersByUserLogin']);
     });
