@@ -73,7 +73,7 @@ class StudentsController extends Controller
 
     public function showDataForCertificate(User $user, int $group) {
         $certificate = UserCertificate::whereUserId($user->id)
-            ->where('ct_ru.group', '=', $group)
+            ->where('ct_ru.group', '=', $group !== 0 ? $group : null)
             ->leftJoin('certificate_types as ct', 'ct.id', '=', 'user_certificates.certificate_id')
             ->leftJoin('certificate_types as ct_ru', 'ct_ru.id', '=', 'ct.certificate_type_parent_id')
             ->select([
@@ -93,16 +93,16 @@ class StudentsController extends Controller
         $description = '';
         $txt = '';
         if ($certificate->certificateType->parent || $certificate->certificateType) {
-            if ($txt = $certificate->certificateType->parent->description ? : $certificate->certificateType->description)
+            if ($txt = @$certificate->certificateType->parent->description ? : $certificate->certificateType->description)
                 $description .= $txt;
 
-            if ($txt = $certificate->certificateType->parent->region ? : $certificate->certificateType->region)
+            if ($txt = @$certificate->certificateType->parent->region ? : $certificate->certificateType->region)
                 $description .= $txt . '; ';
 
-            if ($txt = $certificate->certificateType->parent->tides ? : $certificate->certificateType->tides)
+            if ($txt = @$certificate->certificateType->parent->tides ? : $certificate->certificateType->tides)
                 $description .= $txt . '; ';
 
-            if ($txt = $certificate->certificateType->parent->weather ? : $certificate->certificateType->weather)
+            if ($txt = @$certificate->certificateType->parent->weather ? : $certificate->certificateType->weather)
                 $description .= $txt . '; ';
         }
 

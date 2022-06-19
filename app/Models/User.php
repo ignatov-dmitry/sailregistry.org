@@ -117,4 +117,12 @@ class User extends Authenticatable
     public function certificates() {
         return $this->hasMany(UserCertificate::class);
     }
+
+    public function schools() {
+        return $this->hasMany(UserSchool::class );
+    }
+
+    public function country() {
+        return $this->hasOne(Country::class);
+    }
 }

@@ -20,4 +20,8 @@ use Illuminate\Database\Eloquent\Model;
 class UserSchool extends Model
 {
     use HasFactory;
+
+    public function school() {
+        return $this->hasOne(School::class);
+    }
 }

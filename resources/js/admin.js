@@ -15,6 +15,14 @@ $(document).ready(function (){
     $('#is_active').selectize({
         placeholder: 'Активация'
     });
+    $('#countries').selectize({
+        placeholder: 'Страны',
+        plugins: ["remove_button"],
+    });
+    $('#schools').selectize({
+        placeholder: 'Школы',
+        plugins: ["remove_button"],
+    });
 
     let selectize_school_admin = school_admin[0].selectize;
 

@@ -3,6 +3,21 @@
 @import "~admin-lte/dist/css/adminlte.css";
 @import "~selectize/dist/css/selectize.css";
 
-.flex {
-    display: flex;
+.user_filter {
+    display: inline-flex;
+    width: 100%;
+    align-items: center;
+}
+.user_filter .selectize-control{
+    width: 20%;
+    margin-right: 10px;
+}
+.users .logo{
+    width: 100px;
+}
+.search {
+    max-width: 200px;
+}
+.form-control{
+    height: calc(2.25rem);
 }

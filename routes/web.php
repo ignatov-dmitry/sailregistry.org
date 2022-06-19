@@ -77,9 +77,10 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth']], 
         Route::get('/', [UserController::class, 'index'])->name('users');
         Route::get('/user/create', [UserController::class, 'create'])->name('create');
         Route::post('/user/store', [UserController::class, 'store'])->name('store');
+        Route::get('/user/show/{user}', [UserController::class, 'show'])->name('show');
         Route::get('/user/edit/{user}', [UserController::class, 'edit'])->name('edit');
         Route::post('/user/update/{user}', [UserController::class, 'update'])->name('update');
-        Route::delete('/user/edit', [UserController::class, 'destroy'])->name('destroy');
+        Route::delete('/user/destroy/{user}', [UserController::class, 'destroy'])->name('destroy');
         Route::get('/ajax/get_users_by_user_login', [UserController::class, 'getUsersByUserLogin']);
     });
 });

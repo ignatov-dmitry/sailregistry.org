@@ -41,7 +41,7 @@
                             <td>{{ $certificate->certificate_number }}</td>
                             <td>{{ $certificate->certificateType->code }}</td>
                             <td>{{ $certificate->certificateType->name }}</td>
-                            <td>{{ $certificate->certificateType->parent->name ? : '-' }}</td>
+                            <td>{{ @$certificate->certificateType->parent->name ? : '-' }}</td>
                             <td>{{ $certificate->school->name }}</td>
                             <td>{{ $certificate->instructor->full_name }}</td>
                             <td>{{ $certificate->issue_date }}</td>
@@ -53,7 +53,7 @@
                     @endforeach
                     @role('super-admin')
                     <tr>
-                        <td colspan="10"><td><a class="btn btn-outline-success" href="{{ route('student.certificate_data', ['user' => $user, 'group' => $key]) }}">Выпустить сертификат</a></td></td>
+                        <td colspan="10"><td><a class="btn btn-outline-success" href="{{ route('student.certificate_data', ['user' => $user, 'group' => $key !== '' ? $key : 0]) }}">Выпустить сертификат</a></td></td>
                     </tr>
                     @endrole
                 @endforeach
