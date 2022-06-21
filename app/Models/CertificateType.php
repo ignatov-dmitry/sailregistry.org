@@ -49,6 +49,16 @@ class CertificateType extends Model
 
     public $timestamps = false;
 
+    public array $types = array(
+        'international' => 'Международный',
+        'local'         => 'Локальный'
+    );
+
+    public array $sources = array(
+        'IYT' => 'Американский',
+        'RSC' => 'Российский'
+    );
+
     public function parent() {
         return $this->hasOne(self::class, 'id', 'certificate_type_parent_id');
     }

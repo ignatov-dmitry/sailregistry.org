@@ -16,14 +16,14 @@ class SchoolController extends Controller
     public function index(Request $request)
     {
         $likeStr = '%' . $request->get('search') . '%';
-        if ($request->get('search')) {
-            $schools = School::where('name', 'like', $likeStr)
-                ->orWhere('name_rus', 'like', $likeStr)
-                ->paginate(20);
-        }
+        $schools = School::distinct();
 
-        else
-            $schools = School::paginate(20);
+        if ($request->get('search')) {
+            $schools = $schools->where('name', 'like', $likeStr)
+                ->orWhere('name_rus', 'like', $likeStr);
+
+        }
+            $schools = $schools->paginate(20);
 
         return view('admin.school.index', compact('schools'));
     }
@@ -64,27 +64,26 @@ class SchoolController extends Controller
     public function edit(School $school)
     {
         $countries = Country::all();
-        $admin = $school->schoolAdmin()->where('role_id', '=', 3)->first();
-        return view('admin.school.show', compact('school', 'countries', 'admin'));
+        $admins = $school->schoolAdmin()->where('role_id', '=', 3)->get();
+        return view('admin.school.show', compact('school', 'countries', 'admins'));
     }
 
     public function update(SchoolRequest $request, School $school)
     {
         $insert = $request->toArray();
-        $requestAdmin = User::whereId($insert['admin_id'])->first();
 
-        $userRoles = UserRole::where([
+        $requestAdmins = User::whereIn('id', $insert['admin_id'])->get();
+
+        UserRole::where([
             'role_id'   => Role::whereSlug(Role::SCHOOL_ADMIN)->first(['id'])->id,
             'school_id' => $school->id
-        ])->first();
+        ])->delete();
 
-        if (!is_null($userRoles)) {
-            $oldAdmin = User::whereId($userRoles->user_id)->first();
-            $oldAdmin->roles()->sync([]);
+
+        foreach ($requestAdmins as $requestAdmin) {
+            $requestAdmin->roles()->sync([Role::whereSlug(Role::SCHOOL_ADMIN)->first(['id'])->id => ['school_id' => $school->id]]);
         }
 
-
-        $requestAdmin->roles()->sync([Role::whereSlug(Role::SCHOOL_ADMIN)->first(['id'])->id => ['school_id' => $school->id]]);
 
         if (isset($insert['logo'])) {
             $filename = time() . '.' . $insert['logo']->getClientOriginalExtension();

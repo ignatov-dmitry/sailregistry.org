@@ -119,7 +119,7 @@ class User extends Authenticatable
     }
 
     public function schools() {
-        return $this->hasMany(UserSchool::class );
+        return $this->belongsToMany(School::class, 'user_roles');
     }
 
     public function country() {

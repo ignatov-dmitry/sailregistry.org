@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', Route::is('admin.users.edit') ? 'Редактировать: ' . $user->name : 'Добавить школу')
+@section('title', Route::is('admin.users.edit') ? 'Редактировать: ' . $user->name : 'Добавить пользователя')
 
 @section('content')
 
@@ -53,7 +53,7 @@
                         </div>
                         <div class="col-4">
                             <div class="form-group">
-                                <label for="middle_name" class="col-form-label">Логин</label>
+                                <label for="middle_name" class="col-form-label">Отчество</label>
                                 <input readonly id="middle_name" class="form-control @error('middle_name') is-invalid @enderror" name="middle_name" value="{{ old('middle_name', $user->middle_name) }}" >
                                 @error('middle_name')
                                 <span class="invalid-feedback" role="alert">
@@ -76,13 +76,12 @@
                         <div class="col-4">
                             <div class="form-group">
                                 <label for="country_id" class="col-form-label">Страна</label>
-{{--                                <select readonly id="country_id" class=" @error('country_id') is-invalid @enderror" name="country_id" >--}}
-{{--                                    <option value="">-</option>--}}
-{{--                                    @foreach($countries as $country)--}}
-{{--                                        <option @if($user->country_id == $country->id) selected @endif value="{{ $country->id }}">{{ $country->name }}</option>--}}
-{{--                                    @endforeach--}}
-{{--                                </select>--}}
-                                <input type="text" readonly class="form-control" value="{{ $user->country }}">
+                                <select disabled id="country_id" class=" @error('country_id') is-invalid @enderror" name="country_id" >
+                                    <option value="">-</option>
+                                    @foreach($countries as $country)
+                                        <option @if($user->country_id == $country->id) selected @endif value="{{ $country->id }}">{{ $country->name }}</option>
+                                    @endforeach
+                                </select>
                                 @error('country_id')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -113,10 +112,25 @@
                             </div>
                         </div>
                     </div>
-{{--                    <div class="form-group mt-3">--}}
-{{--                        <button type="submit" class="btn btn-primary">Сохранить</button>--}}
-{{--                    </div>--}}
+                    @role('super-admin', 'school-admin')
+                    <div class="form-group mt-3">
+                        <button type="submit" class="btn btn-primary">Сохранить</button>
+                    </div>
+                    @endrole
                 </form>
+                @role('super-admin', 'school-admin')
+                <form action="{{ route('admin.users.send_credentials', $user) }}" method="post">
+                    @csrf
+                    <div class="row">
+                        <div class="col-2">
+                            <input class="form-control" type="email" placeholder="email" name="email">
+                            <div class="form-group mt-3">
+                                <button type="submit" class="btn btn-primary">Отправить логин и пароль</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                @endrole
             </div>
         </div>
     </section>

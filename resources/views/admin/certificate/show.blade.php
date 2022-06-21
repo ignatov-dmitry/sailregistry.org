@@ -31,6 +31,17 @@
                         </div>
                         <div class="col-4">
                             <div class="form-group">
+                                <label for="name_rus" class="col-form-label">Название (rus.)</label>
+                                <input id="name_rus" class="form-control @error('name_rus') is-invalid @enderror" name="name_rus" value="{{ old('name_rus', $certificateType->name_rus) }}" >
+                                @error('name_rus')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="form-group">
                                 <label for="code" class="col-form-label">Код</label>
                                 <input id="code" class="form-control @error('code') is-invalid @enderror" name="code" value="{{ old('code', $certificateType->code) }}" >
                                 @error('code')
@@ -122,6 +133,38 @@
                                 @enderror
                             </div>
                         </div>
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label for="type" class="col-form-label">Тип</label>
+                                <select id="type" name="type">
+                                    <option value=""></option>
+                                    @foreach($certificateType->types as $key => $type)
+                                        <option @if($certificateType->type == $key) selected @endif value="{{ $key }}">{{ $type }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label for="source" class="col-form-label">Источник</label>
+                                <select id="source" name="source">
+                                    <option value=""></option>
+                                    @foreach($certificateType->sources as $key => $source)
+                                        <option @if($certificateType->source == $key) selected @endif value="{{ $key }}">{{ $source }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label for="is_active" class="col-form-label">Активация</label>
+                                <select id="is_active" name="is_active">
+                                    <option value="1">Да</option>
+                                    <option @if(!$certificateType->is_active) selected @endif value="0">Нет</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
                     <div class="form-group mt-3">
                         <button type="submit" class="btn btn-primary">Сохранить</button>
                     </div>

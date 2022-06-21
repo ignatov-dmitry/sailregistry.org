@@ -10,20 +10,30 @@ $(document).ready(function (){
     $('#certificate_type_parent_id').selectize({placeholder: 'Родительский сертификат'});
     $('#country_id').selectize({placeholder: 'Страна'});
 
-    let school_admin = $('#admin_id').selectize({placeholder: 'Введите логин'});
+    let school_admin = $('#admin_id').selectize({
+        placeholder: 'Введите логин',
+        plugins: ["remove_button"]
+    });
 
     $('#is_active').selectize({
         placeholder: 'Активация'
     });
     $('#countries').selectize({
         placeholder: 'Страны',
-        plugins: ["remove_button"],
+        plugins: ["remove_button"]
     });
     $('#schools').selectize({
         placeholder: 'Школы',
-        plugins: ["remove_button"],
+        plugins: ["remove_button"]
     });
 
+    $('#type').selectize({
+        placeholder: 'Тип'
+    });
+
+    $('#source').selectize({
+        placeholder: 'Источник'
+    });
     let selectize_school_admin = school_admin[0].selectize;
 
     $('#admin_id-selectized').keyup(function () {

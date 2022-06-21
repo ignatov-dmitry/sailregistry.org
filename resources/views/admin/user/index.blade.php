@@ -9,17 +9,19 @@
                 <h3 class="card-title">Пользователи</h3>
                 <div>
                     <form method="get" class="user_filter">
-                        <a href="{{ route('admin.schools.create') }}" class="btn btn-link">Добавить пользователя</a>
+{{--                        <a href="{{ route('admin.schools.create') }}" class="btn btn-link">Добавить пользователя</a>--}}
                         <select multiple name="country_id[]" id="countries">
                             @foreach($countries as $country)
                                 <option @if(request()->get('country_id') && in_array($country->id, request()->get('country_id'))) selected @endif value="{{ $country->id }}">{{ $country->name }}</option>
                             @endforeach
                         </select>
+                        @role('super-admin', 'co-admin')
                         <select multiple name="school_id[]" id="schools">
                             @foreach($schools as $school)
                                 <option @if(request()->get('school_id') && in_array($school->id, request()->get('school_id'))) selected @endif value="{{ $school->id }}">{{ $school->name }}</option>
                             @endforeach
                         </select>
+                        @endrole
                         <input type="text" class="form-control search" value="{{ request('search') }}" placeholder="Поиск" name="search">
                         <button type="submit" class="btn btn-default">Искать</button>
                     </form>
@@ -39,11 +41,10 @@
                     </thead>
                     <tbody>
                     @foreach($users as $user)
-
                         <tr>
                             <td>{{ $user->id }}</td>
-                            <td>{{ $user->name }}</td>
-                            <td>{{ @$user->country->name }}</td>
+                            <td>{{ $user->full_name }}</td>
+                            <td>{{ @$user->country }}</td>
                             <td>{{ $user->birthday }}</td>
                             <td><img class="logo" src="{{ $user->img_src }}" alt=""></td>
                             <td>

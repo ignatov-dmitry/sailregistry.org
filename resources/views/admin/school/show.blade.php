@@ -148,10 +148,12 @@
                         <div class="col-4">
                             <div class="form-group">
                                 <label for="admin_id" class="col-form-label">Администратор школы</label>
-                                <select required id="admin_id" name="admin_id">
-                                    @isset($admin->user_id)
-                                        <option selected value="{{ $admin->user_id }}">{{ $admin->user->user_login }}</option>
-                                    @endisset
+                                <select multiple required id="admin_id" name="admin_id[]">
+                                    @foreach($admins as $admin)
+                                        @isset($admin->user_id)
+                                            <option selected value="{{ $admin->user_id }}">{{ $admin->user->user_login }}</option>
+                                        @endisset
+                                    @endforeach
                                 </select>
                             </div>
                         </div>

@@ -82,5 +82,6 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth']], 
         Route::post('/user/update/{user}', [UserController::class, 'update'])->name('update');
         Route::delete('/user/destroy/{user}', [UserController::class, 'destroy'])->name('destroy');
         Route::get('/ajax/get_users_by_user_login', [UserController::class, 'getUsersByUserLogin']);
+        Route::post('/user/{user}/send_credentials', [UserController::class, 'sendCredentials'])->name('send_credentials');
     });
 });

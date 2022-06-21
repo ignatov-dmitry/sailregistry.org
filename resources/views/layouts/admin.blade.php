@@ -52,24 +52,34 @@
                 <div class="sidebar">
                     <nav class="mt-2">
                         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+
+                            @role('super-admin', 'co-admin')
                             <li class="nav-item">
                                 <a href="{{ route('admin.certificates.certificates') }}" class="nav-link {{ Route::is('admin.certificates.*') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-tachometer-alt"></i>
                                     <p>Типы сертификатов</p>
                                 </a>
                             </li>
+                            @endrole
+
+                            @role('super-admin', 'co-admin')
                             <li class="nav-item">
                                 <a href="{{ route('admin.schools.schools') }}" class="nav-link {{ Route::is('admin.schools.*') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-tachometer-alt"></i>
                                     <p>Школы</p>
                                 </a>
                             </li>
+                            @endrole
+
+                            @role('super-admin', 'co-admin')
                             <li class="nav-item">
                                 <a href="{{ route('admin.countries.countries') }}" class="nav-link {{ Route::is('admin.countries.*') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-tachometer-alt"></i>
                                     <p>Страны</p>
                                 </a>
                             </li>
+                            @endrole
+
                             <li class="nav-item">
                                 <a href="{{ route('admin.users.users') }}" class="nav-link {{ Route::is('admin.users.*') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-tachometer-alt"></i>

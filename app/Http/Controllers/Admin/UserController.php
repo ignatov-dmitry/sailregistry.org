@@ -9,22 +9,32 @@ use App\Models\Role;
 use App\Models\School;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
+use Mail;
 
 class UserController extends Controller
 {
     public function index(Request $request)
     {
+        $currentUser = Auth::user();
         $searchKeys = array('country_id', 'school_id', 'search');
         $countries = Country::all();
         $schools = School::all();
         $likeStr = '%' . $request->get('search') . '%';
+
         $users = User::distinct()
             ->select(['users.*'])
             ->leftJoin('user_roles as ur', 'ur.user_id', '=', 'users.id')
-            ->where('ur.role_id', '=', Role::where('slug', '=', Role::BASIC_CONTRIBUTOR)->first('id')->id);
+            ->whereNot('ur.role_id', '=', Role::where('slug', '=', Role::SUPER_ADMIN)->first('id')->id);
+
+
+        if ($currentUser->hasRole('school-admin')) {
+            $users = $users->whereIn('ur.school_id', array_column($currentUser->schools->toArray(), 'id'));
+        }
 
         foreach ($request->toArray() as $key => $item) {
-
             if ($key == 'search') {
                 $users = $users->where(function ($query) use ($likeStr){
                     $query->orWhere('first_name', 'like', $likeStr);
@@ -44,7 +54,7 @@ class UserController extends Controller
                 }
             }
         }
-        $users = $users->paginate(20);
+        $users = $users->paginate(20, ['id']);
 
         return view('admin.user.index', compact('users', 'countries', 'schools'));
     }
@@ -88,5 +98,20 @@ class UserController extends Controller
             ->get();
 
         return response()->json($users);
+    }
+
+    public function sendCredentials(Request $request, User $user) {
+        $password = Str::random(8);
+
+        $user->password = Hash::make($password);
+        $user->save();
+
+        Mail::send('admin.email.credentials', ['login' => $user->user_login,'password' => $password], function ($m) use ($request) {
+            $m->from('credentials@sailregistry.org', 'sailregistry.org');
+
+            $m->to($request->email)->subject('Ваши доступы к системе sailregistry.org');
+        });
+
+        return view('admin.email.credentials', ['login' => $user->user_login,'password' => $password]);
     }
 }
