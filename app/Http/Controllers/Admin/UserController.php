@@ -16,9 +16,17 @@ use Mail;
 
 class UserController extends Controller
 {
+    private $currentUser;
+
+    public function __construct(){
+        $this->middleware(function ($request, $next) {
+            $this->currentUser= Auth::user();
+            return $next($request);
+        });
+    }
+
     public function index(Request $request)
     {
-        $currentUser = Auth::user();
         $searchKeys = array('country_id', 'school_id', 'search');
         $countries = Country::all();
         $schools = School::all();
@@ -30,8 +38,8 @@ class UserController extends Controller
             ->whereNot('ur.role_id', '=', Role::where('slug', '=', Role::SUPER_ADMIN)->first('id')->id);
 
 
-        if ($currentUser->hasRole('school-admin')) {
-            $users = $users->whereIn('ur.school_id', array_column($currentUser->schools->toArray(), 'id'));
+        if ($this->currentUser->hasRole('school-admin')) {
+            $users = $users->whereIn('ur.school_id', array_column($this->currentUser->schools->toArray(), 'id'));
         }
 
         foreach ($request->toArray() as $key => $item) {
@@ -76,10 +84,22 @@ class UserController extends Controller
 
     public function edit(User $user)
     {
+        $countries = Country::all(['id', 'name'])->toArray();
+        $countries = array_combine(array_column($countries, 'id'), array_column($countries, 'name'));
 
-        $countries = Country::all();
         $schools = School::all();
-        return view('admin.user.show', compact('schools', 'countries', 'user'));
+        $userSchoolsIds = array_column($user->schools->toArray(), 'id');
+        $currentUserSchools = array_column($this->currentUser->schools->toArray(), 'id');
+
+        if ((bool)array_intersect($userSchoolsIds, $currentUserSchools) || $this->currentUser->hasRole(Role::SUPER_ADMIN))
+        {
+            $canEdit = '';
+        }
+        else {
+            $canEdit = 'disabled';
+        }
+
+        return view('admin.user.show', compact('schools', 'countries', 'user', 'canEdit'));
     }
 
     public function update(UserRequest $request, User $user)

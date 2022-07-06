@@ -67,6 +67,12 @@ use Laravel\Sanctum\HasApiTokens;
  * @method static \Illuminate\Database\Eloquent\Builder|User whereUserStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereWpUserId($value)
  * @mixin \Eloquent
+ * @property string|null $hash
+ * @property string|null $img
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\School[] $schools
+ * @property-read int|null $schools_count
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereHash($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereImg($value)
  */
 class User extends Authenticatable
 {

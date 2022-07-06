@@ -5,6 +5,7 @@ window.bsCustomFileInput = require('admin-lte/plugins/bs-custom-file-input/bs-cu
 require('./bootstrap');
 import $ from 'jquery';
 window.$ = window.jQuery = $;
+require('inputmask');
 
 $(document).ready(function (){
     $('#certificate_type_parent_id').selectize({placeholder: 'Родительский сертификат'});
@@ -56,3 +57,5 @@ $(document).ready(function (){
 
     $('#phone').mask('+7 (000) 000-00-00');
 });
+
+Inputmask({ alias: "datetime", inputFormat: "dd.mm.yyyy"}).mask(".date");

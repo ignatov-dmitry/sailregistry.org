@@ -5,6 +5,7 @@
         Total: {{ $total }}
         <form action="{{ route('student.list') }}" method="GET">
             <div class="form-group row">
+                @role('super-admin', 'co-admin')
                 <div class="col-md-4">
                     <select multiple name="schools[]" id="schools">
                         @foreach($russian_schools as $school)
@@ -12,6 +13,7 @@
                         @endforeach
                     </select>
                 </div>
+                @endrole
             </div>
             <div class="form-group row">
                 <div class="col-md-3">

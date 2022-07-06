@@ -23,6 +23,7 @@
     },
     "dependencies": {
         "admin-lte": "^3.1.0",
+        "inputmask": "^5.0.7",
         "jquery-mask-plugin": "^1.14.16",
         "selectize": "^0.12.6"
     }

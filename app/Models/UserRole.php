@@ -16,6 +16,9 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|UserRole whereRoleId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|UserRole whereUserId($value)
  * @mixin \Eloquent
+ * @property int $school_id
+ * @property-read \App\Models\User|null $user
+ * @method static \Illuminate\Database\Eloquent\Builder|UserRole whereSchoolId($value)
  */
 class UserRole extends Model
 {

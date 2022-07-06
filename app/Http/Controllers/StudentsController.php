@@ -3,13 +3,11 @@
 namespace App\Http\Controllers;
 
 
-use App\Classes\PDF_EPS;
+use App\Models\CertificateType;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\UserCertificate;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
-use Imagick;
 use Intervention\Image\Facades\Image;
 use setasign\Fpdi\Tfpdf\Fpdi;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
@@ -19,7 +17,11 @@ class StudentsController extends Controller
     public function index(Request $request)
     {
         $russian_schools = ['RAYS', 'Oleg Goncharenko Sailing School', 'Russian Yacht Center', 'Moscow Sailing Academy', 'Daleco', 'Navigatore'];
-        if ($request->get('schools'))
+
+        if ($schoolIds = array_column(auth()->user()->schools->toArray(), 'name')){
+            $selected_schools = $schoolIds;
+        }
+        elseif ($request->get('schools'))
             $selected_schools = $request->get('schools');
         else
             $selected_schools = $russian_schools;
@@ -58,7 +60,7 @@ class StudentsController extends Controller
             ->leftJoin('certificate_types as ct_ru', 'ct_ru.id', '=', 'ct.certificate_type_parent_id')
             ->select([
                 'user_certificates.*',
-                'ct.*',
+                //'ct.*',
                 'ct_ru.id as id_ru',
                 'ct_ru.name as name_ru',
                 'ct_ru.description as description_ru',
@@ -67,6 +69,10 @@ class StudentsController extends Controller
                 'ct_ru.weather as weather_ru',
                 'ct_ru.group as group_ru',
             ])
+            ->orderBy('ct.certificate_type_parent_id', 'desc')
+            ->orderBy('user_certificates.id', 'desc')
+
+            ->orderBy('user_certificates.has_children_certificate')
             ->get()->groupBy('group_ru', true);
         return view('students.student', compact('user', 'userCertificatesGroups'));
     }
@@ -213,5 +219,105 @@ class StudentsController extends Controller
 
             return response()->download($pdf);
         }
+    }
+
+    public function createCertificate(User $user, int $group) {
+        $currentUser = User::leftJoin('user_roles as ur', 'users.id', '=', 'ur.user_id')
+            ->where('users.id', '=', auth()->user()->id)
+            ->where('ur.role_id', '=', Role::whereSlug(Role::SCHOOL_ADMIN)->first('id')->toArray())
+            ->get()->toArray();
+
+        $currentUserSchools = array_column($currentUser, 'school_id');
+        $userSchools = array_column($user->schools->toArray(), 'id');
+
+
+        if ((bool)array_intersect($currentUserSchools, $userSchools)
+            || auth()->user()->hasRole(Role::SUPER_ADMIN)) {
+
+            $certificateTypes = CertificateType::all();
+
+            $group = $group !== 0 ? $group : null;
+
+            $certificate = UserCertificate::whereUserId($user->id)
+                ->where('ct_ru.group', '=', $group)
+                ->leftJoin('certificate_types as ct', 'ct.id', '=', 'user_certificates.certificate_id')
+                ->leftJoin('certificate_types as ct_ru', 'ct_ru.id', '=', 'ct.certificate_type_parent_id')
+                ->select([
+                    'user_certificates.*',
+                    'ct.*',
+                    'ct_ru.id as id_ru',
+                    'ct_ru.name as name_ru',
+                    'ct_ru.description as description_ru',
+                    'ct_ru.region as region_ru',
+                    'ct_ru.tides as tides_ru',
+                    'ct_ru.weather as weather_ru',
+                    'ct_ru.group as group_ru',
+                ])
+                ->orderByDesc('ct_ru.priority')
+                ->first();
+
+            return view('students.certificate_issue_form', compact('certificate', 'certificateTypes', 'group'));
+        }
+        else {
+            return abort(403);
+        }
+
+    }
+
+    public function issueCertificate(User $user, int $group, Request $request) {
+        $certificates = UserCertificate::whereUserId($user->id)
+            ->where('ct_ru.group', '=', $group !== 0 ? $group : null)
+            ->leftJoin('certificate_types as ct', 'ct.id', '=', 'user_certificates.certificate_id')
+            ->leftJoin('certificate_types as ct_ru', 'ct_ru.id', '=', 'ct.certificate_type_parent_id')
+            ->select([
+                'user_certificates.*',
+                'ct.*',
+                'ct_ru.id as id_ru',
+                'ct_ru.name as name_ru',
+                'ct_ru.description as description_ru',
+                'ct_ru.region as region_ru',
+                'ct_ru.tides as tides_ru',
+                'ct_ru.weather as weather_ru',
+                'ct_ru.group as group_ru',
+            ])
+            ->orderByDesc('ct_ru.priority');
+
+        $highCertificate = $certificates->first();
+
+        $certificates->update(['has_children_certificate' => true]);
+
+        $certificate = UserCertificate::create([
+            'user_id'        => $user->id,
+            'certificate_id' => $request->get('certificate_id'),
+            'school_id'      => $highCertificate->school_id,
+            'instructor_id'  => $highCertificate->instructor_id,
+            'issue_date'     => date("Y-m-d", strtotime($request->get('issue_date'))),
+            'expiry_date'    => date("Y-m-d", strtotime($request->get('expiry_date'))),
+            'original_issue' => date("Y-m-d", strtotime($request->get('original_issue')))
+        ]);
+
+        $certificate->certificate_number = $certificate->id + 100000;
+        $certificate->save();
+
+        return redirect()->route('student.student', $user->hash);
+    }
+
+    public function showRusCertificateData(User $user, UserCertificate $certificate) {
+        $description = '';
+        if ($certificate->certificateType->parent || $certificate->certificateType) {
+            if ($txt = @$certificate->certificateType->parent->description ? : $certificate->certificateType->description)
+                $description .= $txt;
+
+            if ($txt = @$certificate->certificateType->parent->region ? : $certificate->certificateType->region)
+                $description .= $txt . '; ';
+
+            if ($txt = @$certificate->certificateType->parent->tides ? : $certificate->certificateType->tides)
+                $description .= $txt . '; ';
+
+            if ($txt = @$certificate->certificateType->parent->weather ? : $certificate->certificateType->weather)
+                $description .= $txt . '; ';
+        }
+
+        return view('students.rus_certificate_form', compact('certificate', 'description'));
     }
 }

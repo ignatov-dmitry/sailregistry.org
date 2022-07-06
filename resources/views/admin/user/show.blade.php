@@ -14,110 +14,169 @@
                 </div>
             </div>
             <div class="card-body">
-                <form method="POST" action="{{ Route::is('admin.schools.edit') ? route('admin.users.update', $user) : route('admin.users.store') }}" enctype="multipart/form-data">
-                    @csrf
-                    @method('POST')
-                    <div class="row">
-                        <div class="col-4">
-                            <div class="form-group">
-                                <label for="user_login" class="col-form-label">Логин</label>
-                                <input readonly id="user_login" class="form-control @error('user_login') is-invalid @enderror" name="user_login" value="{{ old('user_login', $user->user_login) }}" >
-                                @error('user_login')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-4">
-                            <div class="form-group">
-                                <label for="first_name" class="col-form-label">Имя</label>
-                                <input readonly id="first_name" class="form-control @error('first_name') is-invalid @enderror" name="first_name" value="{{ old('first_name', $user->first_name) }}" >
-                                @error('first_name')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-4">
-                            <div class="form-group">
-                                <label for="last_name" class="col-form-label">Фамилия</label>
-                                <input readonly id="last_name" class="form-control @error('last_name') is-invalid @enderror" name="last_name" value="{{ old('last_name', $user->last_name) }}" >
-                                @error('last_name')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-4">
-                            <div class="form-group">
-                                <label for="middle_name" class="col-form-label">Отчество</label>
-                                <input readonly id="middle_name" class="form-control @error('middle_name') is-invalid @enderror" name="middle_name" value="{{ old('middle_name', $user->middle_name) }}" >
-                                @error('middle_name')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-4">
-                            <div class="form-group">
-                                <label for="full_name" class="col-form-label">Полное имя</label>
-                                <input readonly id="full_name" class="form-control @error('full_name') is-invalid @enderror" name="full_name" value="{{ old('full_name', $user->full_name) }}" >
-                                @error('full_name')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-4">
-                            <div class="form-group">
-                                <label for="country_id" class="col-form-label">Страна</label>
-                                <select disabled id="country_id" class=" @error('country_id') is-invalid @enderror" name="country_id" >
-                                    <option value="">-</option>
-                                    @foreach($countries as $country)
-                                        <option @if($user->country_id == $country->id) selected @endif value="{{ $country->id }}">{{ $country->name }}</option>
-                                    @endforeach
-                                </select>
-                                @error('country_id')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-4">
-                            <div class="form-group">
-                                <label for="birthday" class="col-form-label">Дата рождения</label>
-                                <input id="birthday"readonly class="form-control @error('birthday') is-invalid @enderror" name="birthday" value="{{ old('birthday', $user->birthday) }}" >
-                                @error('birthday')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-4">
-                            <div class="form-group">
-                                <label for="email" class="col-form-label">EMAIL</label>
-                                <input id="email" readonly class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email', $user->email) }}" >
-                                @error('email')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
+                {!! Form::open(['url' => Route::is('admin.schools.edit') ? route('admin.users.update', $user) : route('admin.users.store')]) !!}
+                <div class="row">
+                    <div class="col-4">
+                        <div class="form-group">
+                            {!! Form::label('user_login', 'Логин', ['class' => 'col-form-label']); !!}
+                            {!! Form::input('text', 'user_login', old('user_login', $user->user_login), ['class' => 'form-control', $canEdit]) !!}
                         </div>
                     </div>
-                    @role('super-admin', 'school-admin')
-                    <div class="form-group mt-3">
-                        <button type="submit" class="btn btn-primary">Сохранить</button>
+                    <div class="col-4">
+                        <div class="form-group">
+                            {!! Form::label('first_name', 'Имя', ['class' => 'col-form-label']); !!}
+                            {!! Form::input('text', 'first_name', old('first_name', $user->first_name), ['class' => 'form-control', $canEdit]) !!}
+                        </div>
                     </div>
-                    @endrole
-                </form>
+                    <div class="col-4">
+                        <div class="form-group">
+                            {!! Form::label('last_name', 'Фамилия', ['class' => 'col-form-label']); !!}
+                            {!! Form::input('text', 'last_name', old('last_name', $user->last_name), ['class' => 'form-control', $canEdit]) !!}
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-group">
+                            {!! Form::label('middle_name', 'Отчество', ['class' => 'col-form-label']); !!}
+                            {!! Form::input('text', 'middle_name', old('middle_name', $user->middle_name), ['class' => 'form-control', $canEdit]) !!}
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-group">
+                            {!! Form::label('full_name', 'Полное имя', ['class' => 'col-form-label']); !!}
+                            {!! Form::input('text', 'full_name', old('full_name', $user->full_name), ['class' => 'form-control', $canEdit]) !!}
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-group">
+                            {!! Form::label('country_id', 'Страна', ['class' => 'col-form-label']); !!}
+                            {!! Form::select('country_id', $countries, old('country_id', $user->country_id), [$canEdit]) !!}
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-group">
+                            {!! Form::label('birthday', 'Дата рождения', ['class' => 'col-form-label']); !!}
+                            {!! Form::input('text', 'birthday', date_format(date_create(old('birthday', $user->birthday)), 'd.m.Y'), ['class' => 'form-control date', $canEdit]) !!}
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-group">
+                            {!! Form::label('email', 'EMAIL', ['class' => 'col-form-label']); !!}
+                            {!! Form::email('birthday', old('email', $user->email), ['class' => 'form-control', $canEdit]) !!}
+                        </div>
+                    </div>
+                </div>
+                @role('super-admin', 'school-admin')
+                <div class="form-group mt-3">
+                    {!! Form::button('Сохранить', ['class' => 'btn btn-primary', 'type' => 'submit']) !!}
+                </div>
+                @endrole
+                {!! Form::close() !!}
+
+
+{{--                <form method="POST" action="{{ Route::is('admin.schools.edit') ? route('admin.users.update', $user) : route('admin.users.store') }}" enctype="multipart/form-data">--}}
+{{--                    @csrf--}}
+{{--                    @method('POST')--}}
+{{--                    <div class="row">--}}
+{{--                        <div class="col-4">--}}
+{{--                            <div class="form-group">--}}
+{{--                                <label for="user_login" class="col-form-label">Логин</label>--}}
+{{--                                <input readonly id="user_login" class="form-control @error('user_login') is-invalid @enderror" name="user_login" value="{{ old('user_login', $user->user_login) }}" >--}}
+{{--                                @error('user_login')--}}
+{{--                                <span class="invalid-feedback" role="alert">--}}
+{{--                                    <strong>{{ $message }}</strong>--}}
+{{--                                </span>--}}
+{{--                                @enderror--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                        <div class="col-4">--}}
+{{--                            <div class="form-group">--}}
+{{--                                <label for="first_name" class="col-form-label">Имя</label>--}}
+{{--                                <input readonly id="first_name" class="form-control @error('first_name') is-invalid @enderror" name="first_name" value="{{ old('first_name', $user->first_name) }}" >--}}
+{{--                                @error('first_name')--}}
+{{--                                <span class="invalid-feedback" role="alert">--}}
+{{--                                    <strong>{{ $message }}</strong>--}}
+{{--                                </span>--}}
+{{--                                @enderror--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                        <div class="col-4">--}}
+{{--                            <div class="form-group">--}}
+{{--                                <label for="last_name" class="col-form-label">Фамилия</label>--}}
+{{--                                <input readonly id="last_name" class="form-control @error('last_name') is-invalid @enderror" name="last_name" value="{{ old('last_name', $user->last_name) }}" >--}}
+{{--                                @error('last_name')--}}
+{{--                                <span class="invalid-feedback" role="alert">--}}
+{{--                                    <strong>{{ $message }}</strong>--}}
+{{--                                </span>--}}
+{{--                                @enderror--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                        <div class="col-4">--}}
+{{--                            <div class="form-group">--}}
+{{--                                <label for="middle_name" class="col-form-label">Отчество</label>--}}
+{{--                                <input readonly id="middle_name" class="form-control @error('middle_name') is-invalid @enderror" name="middle_name" value="{{ old('middle_name', $user->middle_name) }}" >--}}
+{{--                                @error('middle_name')--}}
+{{--                                <span class="invalid-feedback" role="alert">--}}
+{{--                                    <strong>{{ $message }}</strong>--}}
+{{--                                </span>--}}
+{{--                                @enderror--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                        <div class="col-4">--}}
+{{--                            <div class="form-group">--}}
+{{--                                <label for="full_name" class="col-form-label">Полное имя</label>--}}
+{{--                                <input readonly id="full_name" class="form-control @error('full_name') is-invalid @enderror" name="full_name" value="{{ old('full_name', $user->full_name) }}" >--}}
+{{--                                @error('full_name')--}}
+{{--                                <span class="invalid-feedback" role="alert">--}}
+{{--                                    <strong>{{ $message }}</strong>--}}
+{{--                                </span>--}}
+{{--                                @enderror--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                        <div class="col-4">--}}
+{{--                            <div class="form-group">--}}
+{{--                                <label for="country_id" class="col-form-label">Страна</label>--}}
+{{--                                <select disabled id="country_id" class=" @error('country_id') is-invalid @enderror" name="country_id" >--}}
+{{--                                    <option value="">-</option>--}}
+{{--                                    @foreach($countries as $country)--}}
+{{--                                        <option @if($user->country_id == $country->id) selected @endif value="{{ $country->id }}">{{ $country->name }}</option>--}}
+{{--                                    @endforeach--}}
+{{--                                </select>--}}
+{{--                                @error('country_id')--}}
+{{--                                <span class="invalid-feedback" role="alert">--}}
+{{--                                    <strong>{{ $message }}</strong>--}}
+{{--                                </span>--}}
+{{--                                @enderror--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                        <div class="col-4">--}}
+{{--                            <div class="form-group">--}}
+{{--                                <label for="birthday" class="col-form-label">Дата рождения</label>--}}
+{{--                                <input id="birthday"readonly class="form-control @error('birthday') is-invalid @enderror" name="birthday" value="{{ old('birthday', $user->birthday) }}" >--}}
+{{--                                @error('birthday')--}}
+{{--                                <span class="invalid-feedback" role="alert">--}}
+{{--                                    <strong>{{ $message }}</strong>--}}
+{{--                                </span>--}}
+{{--                                @enderror--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                        <div class="col-4">--}}
+{{--                            <div class="form-group">--}}
+{{--                                <label for="email" class="col-form-label">EMAIL</label>--}}
+{{--                                <input id="email" readonly class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email', $user->email) }}" >--}}
+{{--                                @error('email')--}}
+{{--                                <span class="invalid-feedback" role="alert">--}}
+{{--                                    <strong>{{ $message }}</strong>--}}
+{{--                                </span>--}}
+{{--                                @enderror--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                    @role('super-admin', 'school-admin')--}}
+{{--                    <div class="form-group mt-3">--}}
+{{--                        <button type="submit" class="btn btn-primary">Сохранить</button>--}}
+{{--                    </div>--}}
+{{--                    @endrole--}}
+{{--                </form>--}}
                 @role('super-admin', 'school-admin')
                 <form action="{{ route('admin.users.send_credentials', $user) }}" method="post">
                     @csrf

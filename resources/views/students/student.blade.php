@@ -21,7 +21,6 @@
                 <th>Номер сертификата</th>
                 <th>Код сертификата</th>
                 <th>Сертификат</th>
-                <th>Сертификат (russian)</th>
                 <th>Школа</th>
                 <th>Инструктор</th>
                 <th>Дата получения</th>
@@ -35,27 +34,37 @@
                 @foreach($userCertificatesGroups as $key => $userCertificatesGroup)
                     @foreach($userCertificatesGroup as $certificate)
                         @php
-                            $is_valid = $certificate->issue_date < $certificate->expiry_date
+                            $is_valid = $certificate->issue_date < $certificate->expiry_date;
+                            $hasChild = $certificate->has_children_certificate;
+                            $hasParent = !is_null($certificate->certificateType->certificate_type_parent_id);
                         @endphp
                         <tr class="@if($is_valid) table-success @else table-danger @endif">
                             <td>{{ $certificate->certificate_number }}</td>
                             <td>{{ $certificate->certificateType->code }}</td>
                             <td>{{ $certificate->certificateType->name }}</td>
-                            <td>{{ @$certificate->certificateType->parent->name ? : '-' }}</td>
                             <td>{{ $certificate->school->name }}</td>
                             <td>{{ $certificate->instructor->full_name }}</td>
                             <td>{{ $certificate->issue_date }}</td>
                             <td>{{ $certificate->expiry_date }}</td>
-                            <td>{{ $certificate->revalidation_date ? : '-' }}</td>
+                            <td>{{ $certificate->original_issue ? : '-' }}</td>
                             <td>@if($is_valid) valid @else expired @endif</td>
+                            <td>
+                                @if(in_array($certificate->certificateType->code, ['S','CS','YS','TS','YCS','YCO','SRC']))
+                                    <a class="btn btn-outline-success" href="{{ route('student.certificate_rus_data', [$user, $certificate->id]) }}">Генерировать сертификат</a>
+                                @endif
+                            </td>
                             <td></td>
                         </tr>
                     @endforeach
-                    @role('super-admin')
+                    @role('super-admin', 'school-admin')
+                    @if($hasParent && !$hasChild && !in_array($certificate->certificateType->code, ['S','CS','YS','TS','YCS','YCO','SRC']))
                     <tr>
-                        <td colspan="10"><td><a class="btn btn-outline-success" href="{{ route('student.certificate_data', ['user' => $user, 'group' => $key !== '' ? $key : 0]) }}">Выпустить сертификат</a></td></td>
+{{--                        <td colspan="7"><td><a class="btn btn-outline-success" href="{{ route('student.certificate_data', ['user' => $user, 'group' => $key !== '' ? $key : 0]) }}">Генерировать сертификат</a></td></td>--}}
+                        <td colspan="9"><td><a class="btn btn-outline-success" href="{{ route('student.create_certificate', ['user' => $user, 'group' => $key !== '' ? $key : 0]) }}">Выпустить сертификат</a></td></td>
                     </tr>
+                    @endif
                     @endrole
+                    <tr><td>1</td></tr>
                 @endforeach
             </tbody>
 

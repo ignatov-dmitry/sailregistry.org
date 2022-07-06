@@ -37,10 +37,25 @@ Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::group(['prefix' => 'student', 'as' => 'student.'], function () {
-    Route::get('/list', [StudentsController::class, 'index'])->middleware(['middleware' => 'role:super-admin'])->name('list');
+    Route::get('/list', [StudentsController::class, 'index'])->middleware(['middleware' => 'role:super-admin,school-admin'])->name('list');
     Route::get('/{hash}', [StudentsController::class, 'showStudent'])->name('student');
-    Route::get('/certificate/{user}/{group}', [StudentsController::class, 'showDataForCertificate'])->middleware(['middleware' => 'role:super-admin'])->name('certificate_data');
-    Route::post('/certificate/get/{user}', [StudentsController::class, 'toPdf'])->middleware(['middleware' => 'role:super-admin'])->name('get_certificate');
+
+    Route::get('/certificate/{user}/{group}', [StudentsController::class, 'showDataForCertificate'])
+        ->middleware(['middleware' => 'role:super-admin,school-admin'])
+        ->name('certificate_data');
+
+    Route::post('/certificate/get/{user}', [StudentsController::class, 'toPdf'])
+        ->middleware(['middleware' => 'role:super-admin,school-admin'])
+        ->name('get_certificate');
+
+    Route::get('/certificate/create/{user}/{group}', [StudentsController::class, 'createCertificate'])->middleware(
+        ['middleware' => 'role:super-admin,school-admin']
+    )->name('create_certificate');
+
+    Route::post('/certificate/issue/{user}/{group}', [StudentsController::class, 'issueCertificate'])->name('issue_certificate');
+
+    Route::get('/certificate/print/{user}/{certificate}', [StudentsController::class, 'showRusCertificateData'])->name('certificate_rus_data');
+
 });
 
 Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth']], function() {
@@ -85,3 +100,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth']], 
         Route::post('/user/{user}/send_credentials', [UserController::class, 'sendCredentials'])->name('send_credentials');
     });
 });
+
+Route::get('/redirection/{old_id}', function ($old_id){
+    return redirect('https://iytnet.com/certprofile/' . $old_id, 301);
+})->name('redirectToIytnet');

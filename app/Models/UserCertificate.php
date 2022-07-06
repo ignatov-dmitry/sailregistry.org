@@ -41,12 +41,22 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|UserCertificate whereSchoolName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|UserCertificate whereUserId($value)
  * @mixin \Eloquent
+ * @property string|null $original_issue
+ * @property int|null $has_children_certificate
+ * @method static \Illuminate\Database\Eloquent\Builder|UserCertificate whereHasChildrenCertificate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserCertificate whereOriginalIssue($value)
  */
 class UserCertificate extends Model
 {
     use HasFactory;
 
     protected $appends = array('link');
+
+    public $timestamps = false;
+
+    protected $guarded = [
+        '_token'
+    ];
 
     public function getLinkAttribute() {
         return 'https://iytnet.com/certprofile/' . $this->attributes['old_id'];

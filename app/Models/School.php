@@ -40,6 +40,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|School wherePhone($value)
  * @method static \Illuminate\Database\Eloquent\Builder|School whereWebsite($value)
  * @mixin \Eloquent
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\UserRole[] $schoolAdmin
+ * @property-read int|null $school_admin_count
  */
 class School extends Model
 {

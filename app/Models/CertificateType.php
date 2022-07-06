@@ -35,6 +35,14 @@ use Illuminate\Database\Eloquent\Model;
  * @property int|null $group
  * @method static \Illuminate\Database\Eloquent\Builder|CertificateType whereGroup($value)
  * @method static \Illuminate\Database\Eloquent\Builder|CertificateType wherePriority($value)
+ * @property string|null $name_rus
+ * @property string|null $type
+ * @property string|null $source
+ * @property int $is_active
+ * @method static \Illuminate\Database\Eloquent\Builder|CertificateType whereIsActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CertificateType whereNameRus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CertificateType whereSource($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CertificateType whereType($value)
  */
 class CertificateType extends Model
 {

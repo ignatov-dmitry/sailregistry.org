@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|UserSchool whereSchoolId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|UserSchool whereUserId($value)
  * @mixin \Eloquent
+ * @property-read \App\Models\School|null $school
  */
 class UserSchool extends Model
 {

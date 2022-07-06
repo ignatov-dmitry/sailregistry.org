@@ -15,9 +15,9 @@ class RoleMiddleware
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      * @param $role
      */
-    public function handle(Request $request, Closure $next, $role)
+    public function handle(Request $request, Closure $next, ...$role)
     {
-        if(auth()->check() && auth()->user()->hasRole($role))
+        if(auth()->check() && auth()->user()->hasRole(...$role))
             return $next($request);
         else
             return response()->redirectToRoute('login');
