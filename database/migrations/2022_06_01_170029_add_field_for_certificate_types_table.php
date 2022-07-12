@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::table('certificate_types', function (Blueprint $table) {
             $table->unsignedBigInteger('certificate_type_parent_id')->nullable();
+            $table->index('certificate_type_parent_id');
             $table->text('description')->nullable();
             $table->string('region')->nullable();
             $table->string('tides')->nullable();

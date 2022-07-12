@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('name')->nullable();
             $table->string('code')->nullable();
             $table->index('id');
-            $table->index('certificate_type_parent_id');
         });
     }
 
