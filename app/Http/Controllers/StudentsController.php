@@ -165,7 +165,7 @@ class StudentsController extends Controller
         $pdf->Cell(50, 0, 'VALID TILL ' . $request->get('expiry_date'), 0, 0, 'R');
 
         $pdf->SetXY(37.2, 16.8);
-        $pdf->Cell(50, 0, 'SINCE ' . $request->get('revalidation_date'), 0, 0, 'R');
+        $pdf->Cell(50, 0, 'SINCE ' . $request->get('original_issue'), 0, 0, 'R');
 
 
 
@@ -202,17 +202,18 @@ class StudentsController extends Controller
 
         $pdf->Close();
 
+        $fileName = str_replace(' ', '_', $request->get('full_name')) . '_' . $request->get('certificate_code') . '_' . str_replace(' ', '_', $request->get('school_name')) . '.pdf';
 
         if (in_array($request->get('send'), ['I']))
-            $pdf->Output($request->get('send'), 'certificate.pdf', true);
+            $pdf->Output($request->get('send'), $fileName, true);
 
         else {
             $epsFile = public_path('temp/certificate.eps');
-            $pdfFile = public_path('cert.pdf');
+            $pdfFile = public_path($fileName);
 
-            file_put_contents($epsFile, $pdf->Output('S', 'certificate.pdf', true));
+            file_put_contents($epsFile, $pdf->Output('S', $request->get('full_name'), true));
 
-            $pdf = public_path('cert.pdf');
+            $pdf = public_path($fileName);
             exec('convert -density 600x600 ' . $epsFile . ' ' . $pdfFile);
             unlink($epsFile);
 

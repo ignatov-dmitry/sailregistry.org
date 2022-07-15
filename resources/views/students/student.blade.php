@@ -64,7 +64,6 @@
                     </tr>
                     @endif
                     @endrole
-                    <tr><td>1</td></tr>
                 @endforeach
             </tbody>
 

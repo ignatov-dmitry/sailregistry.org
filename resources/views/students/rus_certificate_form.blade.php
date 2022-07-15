@@ -4,6 +4,7 @@
         <form style="padding: 0 20%" action="{{ route('student.get_certificate', $certificate->user) }}" method="post">
             @csrf
             <input type="hidden" name="user_id">
+            <input type="hidden" name="school_name" value="{{ $certificate->school->name }}">
             <div class="form-group">
                 <label for="full_name">ФИО</label>
                 <input type="text" id="full_name" name="full_name" class="form-control" value="{{ $certificate->user->full_name }}">
@@ -23,11 +24,11 @@
             </div>
             <div class="form-group">
                 <label for="issue_date">Дата начала</label>
-                <input type="text" id="issue_date" name="issue_date" class="form-control date" value="{{ date_format(date_create($certificate->issue_date), 'd.m.Y') }}">
+                <input type="text" id="issue_date" name="issue_date" class="form-control date" value="{{ date('d.m.Y') }}">
             </div>
             <div class="form-group">
                 <label for="expiry_date">Дата окончания</label>
-                <input type="text" id="expiry_date" name="expiry_date" class="form-control date" value="{{ date_format(date_create($certificate->expiry_date), 'd.m.Y') }}">
+                <input type="text" id="expiry_date" name="expiry_date" class="form-control date" value="{{ date('d.m.Y', strtotime('+5 years')) }}">
             </div>
             <div class="form-group">
                 <label for="original_issue">Первое получение</label>
