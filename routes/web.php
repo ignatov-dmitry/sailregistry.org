@@ -90,8 +90,15 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth']], 
 
     Route::group(['prefix' => 'users', 'as' => 'users.'], function () {
         Route::get('/', [UserController::class, 'index'])->name('users');
-        Route::get('/user/create', [UserController::class, 'create'])->name('create');
-        Route::post('/user/store', [UserController::class, 'store'])->name('store');
+
+        Route::get('/user/create', [UserController::class, 'create'])->middleware(
+            ['middleware' => 'role:super-admin,school-admin']
+        )->name('create');
+
+        Route::post('/user/store', [UserController::class, 'store'])->name('store')->middleware(
+            ['middleware' => 'role:super-admin,school-admin']
+        );
+
         Route::get('/user/show/{user}', [UserController::class, 'show'])->name('show');
         Route::get('/user/edit/{user}', [UserController::class, 'edit'])->name('edit');
         Route::post('/user/update/{user}', [UserController::class, 'update'])->name('update');

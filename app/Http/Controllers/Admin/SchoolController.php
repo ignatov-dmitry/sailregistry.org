@@ -30,13 +30,16 @@ class SchoolController extends Controller
 
     public function create(School $school)
     {
+        //TODO Сделать проверку чтобы не выводились пользователи которые являются админами школ
         $countries = Country::all();
-        return view('admin.school.show', compact('school', 'countries'));
+        $admins = $school->schoolAdmin()->where('role_id', '=', 3)->get();
+        return view('admin.school.show', compact('school', 'countries', 'admins'));
     }
 
 
     public function store(SchoolRequest $request)
     {
+        //TODO Сделать проверку чтобы не выводились пользователи которые являются админами школ
         $insert = $request->toArray();
 
         if (isset($insert['logo'])) {
@@ -63,6 +66,7 @@ class SchoolController extends Controller
 
     public function edit(School $school)
     {
+        //TODO Сделать проверку чтобы не выводились пользователи которые являются админами школ
         $countries = Country::all();
         $admins = $school->schoolAdmin()->where('role_id', '=', 3)->get();
         return view('admin.school.show', compact('school', 'countries', 'admins'));
@@ -70,6 +74,7 @@ class SchoolController extends Controller
 
     public function update(SchoolRequest $request, School $school)
     {
+        //TODO Сделать проверку чтобы не выводились пользователи которые являются админами школ
         $insert = $request->toArray();
 
         $requestAdmins = User::whereIn('id', $insert['admin_id'])->get();

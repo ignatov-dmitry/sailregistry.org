@@ -28,6 +28,15 @@ $(document).ready(function (){
         plugins: ["remove_button"]
     });
 
+    $('#school_id').selectize({
+        placeholder: 'Школа',
+    });
+
+    $('#school_ids').selectize({
+        placeholder: 'Школа',
+        plugins: ["remove_button"]
+    });
+
     $('#type').selectize({
         placeholder: 'Тип'
     });
