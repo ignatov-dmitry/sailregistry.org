@@ -8,6 +8,7 @@ use App\Models\Country;
 use App\Models\Role;
 use App\Models\School;
 use App\Models\User;
+use App\Traits\Image;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -16,6 +17,7 @@ use Mail;
 
 class UserController extends Controller
 {
+    use Image;
     public function index(Request $request)
     {
         $searchKeys = array('country_id', 'school_id', 'search');
@@ -81,12 +83,10 @@ class UserController extends Controller
 
     public function store(UserRequest $request)
     {
+        //TODO Проверить чтобы небыло проблем со school_id При сохранении под админом школы (добавлялась школа, а не перезаписывалась)
         $insert = $request->toArray();
-
-        $this->uploadPhoto($insert, 'img');
-
+        $insert['img'] = isset($insert['img']) ? $this->uploadPhoto($insert['img'], User::LOGO_PATH) : null;
         $user = User::create($insert);
-
         $schoolRoleId = Role::whereSlug(Role::BASIC_CONTRIBUTOR)->first()->id;
 
         if (isset($insert['school_id']) && is_array($insert['school_id']) && Auth::user()->hasRole(Role::SUPER_ADMIN)) {
@@ -139,7 +139,20 @@ class UserController extends Controller
 
     public function update(UserRequest $request, User $user)
     {
+        //TODO Проверить чтобы небыло проблем со school_id При сохранении под админом школы (добавлялась школа, а не перезаписывалась)
+        $updateData = array('id' => $user->id);
+        $updateData = array_merge($updateData, $request->toArray());
 
+        $user->update($updateData);
+
+        $schoolRoleId = Role::whereSlug(Role::BASIC_CONTRIBUTOR)->first()->id;
+
+        if (isset($request['school_id']) && is_array($request['school_id']) && Auth::user()->hasRole(Role::SUPER_ADMIN)) {
+            $user->schools()->syncWithPivotValues($request['school_id'], ['role_id' => $schoolRoleId]);
+        }
+        else {
+            $user->roles()->sync([$schoolRoleId => ['school_id' => Auth::user()->schools->first()->id]]);
+        }
     }
 
     public function destroy(User $user)
@@ -168,13 +181,5 @@ class UserController extends Controller
         });
 
         return view('admin.email.credentials', ['login' => $user->user_login,'password' => $password]);
-    }
-
-    private function uploadPhoto(array &$request, $field) {
-        if (isset($request[$field])) {
-            $filename = time() . '.' . $request[$field]->getClientOriginalExtension();
-            $request[$field]->move(public_path(User::LOGO_PATH), $filename);
-            $request[$field] = School::LOGO_PATH . '/' . $filename;
-        }
     }
 }

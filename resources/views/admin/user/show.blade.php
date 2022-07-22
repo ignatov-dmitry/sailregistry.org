@@ -3,7 +3,6 @@
 @section('title', Route::is('admin.users.edit') ? 'Редактировать: ' . $user->name : 'Добавить пользователя')
 
 @section('content')
-
     <section class="content">
         <div class="card">
             <div class="card-header">
@@ -17,7 +16,7 @@
                 </div>
             </div>
             <div class="card-body">
-                {!! Form::open(['url' => Route::is('admin.schools.edit') ? route('admin.users.update', $user) : route('admin.users.store'), 'enctype' => 'multipart/form-data']) !!}
+                {!! Form::open(['url' => Route::is('admin.users.edit') ? route('admin.users.update', $user) : route('admin.users.store'), 'enctype' => 'multipart/form-data']) !!}
                 <div class="row">
                     <div class="col-4">
                         <div class="form-group">
@@ -59,7 +58,7 @@
                     <div class="col-4">
                         <div class="form-group">
                             {!! Form::label($schoolSelectAttributes['id'], 'Школа', ['class' => 'col-form-label']); !!}
-                            {!! Form::select('school_id[]', $schools, $userSchoolsIds, $schoolSelectAttributes) !!}
+                            {!! Form::select('school_id[]', $schools, @$userSchoolsIds, $schoolSelectAttributes) !!}
                         </div>
                     </div>
                     @endrole
