@@ -103,6 +103,10 @@ class User extends Authenticatable
 
     public const LOGO_PATH = 'images/photos';
 
+    public function setBirthdayAttribute($value){
+        $this->attributes['birthday'] =  date("Y-m-d", strtotime($value));
+    }
+
     public function roles() {
         return $this->belongsToMany(Role::class, 'user_roles');
     }

@@ -10,7 +10,10 @@
 
                 <div class="card-tools">
                     @if(Route::is('admin.users.edit'))
-                    <a href="{{ route('admin.users.show', $user) }}" class="btn btn-link" target="_blank">Перейти к профилю</a>
+                        @if($user->old_id)
+                            <a href="{{ route('redirectToIytnet', $user->old_id) }}" rel="noreferrer" target="_blank">Посмотреть на iytnet</a>
+                        @endif
+                        <a href="{{ route('admin.users.show', $user) }}" class="btn btn-link" target="_blank">Перейти к профилю</a>
                     @endif
                     <a href="{{ route('admin.users.create') }}" class="btn btn-link">Добавить пользователя</a>
                 </div>
@@ -84,6 +87,9 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <div class="col-4">
+                        <img src="{{ isset($user->img) ? '/' . $user->img : '' }}" id="photo" alt="">
                     </div>
                 </div>
                 @role('super-admin', 'school-admin')

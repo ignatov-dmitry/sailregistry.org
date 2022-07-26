@@ -55,6 +55,9 @@ class UserController extends Controller
                 }
             }
         }
+
+
+
         $users = $users->paginate(20, ['id']);
 
         return view('admin.user.index', compact('users', 'countries', 'schools'));
@@ -85,7 +88,11 @@ class UserController extends Controller
     {
         //TODO Проверить чтобы небыло проблем со school_id При сохранении под админом школы (добавлялась школа, а не перезаписывалась)
         $insert = $request->toArray();
-        $insert['img'] = isset($insert['img']) ? $this->uploadPhoto($insert['img'], User::LOGO_PATH) : null;
+
+        if (isset($insert['img'])) {
+            $insert['img'] = $this->uploadPhoto($insert['img'], User::LOGO_PATH);
+        }
+
         $user = User::create($insert);
         $schoolRoleId = Role::whereSlug(Role::BASIC_CONTRIBUTOR)->first()->id;
 
@@ -96,7 +103,7 @@ class UserController extends Controller
             $user->roles()->sync([$schoolRoleId => ['school_id' => Auth::user()->schools->first()->id]]);
         }
 
-        return view('admin.user.index');
+        return response()->redirectToRoute('admin.users.edit', $user);
     }
 
     public function show(User $user)
@@ -143,6 +150,10 @@ class UserController extends Controller
         $updateData = array('id' => $user->id);
         $updateData = array_merge($updateData, $request->toArray());
 
+        if (isset($updateData['img'])) {
+            $updateData['img'] = $this->uploadPhoto($updateData['img'], User::LOGO_PATH);
+        }
+
         $user->update($updateData);
 
         $schoolRoleId = Role::whereSlug(Role::BASIC_CONTRIBUTOR)->first()->id;
@@ -153,6 +164,8 @@ class UserController extends Controller
         else {
             $user->roles()->sync([$schoolRoleId => ['school_id' => Auth::user()->schools->first()->id]]);
         }
+
+        return response()->redirectToRoute('admin.users.edit', $user);
     }
 
     public function destroy(User $user)

@@ -8,6 +8,16 @@ window.$ = window.jQuery = $;
 require('inputmask');
 
 $(document).ready(function (){
+    $('#img').change(function () {
+        let rd = new FileReader(); // Создаем объект чтения файла
+        let files = this.files [0]; // Получаем файлы в файловом компоненте
+        rd.readAsDataURL(files); // чтение файла заменено на тип base64
+        rd.onloadend = function (e) {
+            // После загрузки получаем результат и присваиваем его img
+            document.getElementById("photo").src = this.result;
+        }
+    });
+
     $('#certificate_type_parent_id').selectize({placeholder: 'Родительский сертификат'});
     $('#country_id').selectize({placeholder: 'Страна'});
 
