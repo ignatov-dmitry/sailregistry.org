@@ -27,3 +27,4 @@ yarn-error.log
 /composer.lock
 /resources/fonts/certificates/unifont/*.php
 /resources/fonts/certificates/unifont/*.dat
+package-lock.json
