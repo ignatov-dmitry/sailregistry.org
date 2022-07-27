@@ -48,8 +48,8 @@ class UserImageSeed extends Seeder
                 }
             }
 
-            $path = '/images/photos/' . $user->hash . '.jpg';
-            $userPhoto->save(public_path() . $path, 100, 'jpg');
+            $path = 'images/photos/' . time() . '.jpg';
+            $userPhoto->save(public_path() . '/' . $path, 100, 'jpg');
             $user->img = $path;
             $user->save();
             $inc++;

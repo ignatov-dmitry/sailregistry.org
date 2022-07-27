@@ -8,7 +8,6 @@ use App\Models\Country;
 use App\Models\Role;
 use App\Models\School;
 use App\Models\User;
-use App\Traits\Image;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -17,7 +16,6 @@ use Mail;
 
 class UserController extends Controller
 {
-    use Image;
     public function index(Request $request)
     {
         $searchKeys = array('country_id', 'school_id', 'search');
@@ -90,7 +88,7 @@ class UserController extends Controller
         $insert = $request->toArray();
 
         if (isset($insert['img'])) {
-            $insert['img'] = $this->uploadPhoto($insert['img'], User::LOGO_PATH);
+            $insert['img'] = User::uploadPhoto($insert['img'], User::LOGO_PATH);
         }
 
         $user = User::create($insert);
@@ -151,7 +149,7 @@ class UserController extends Controller
         $updateData = array_merge($updateData, $request->toArray());
 
         if (isset($updateData['img'])) {
-            $updateData['img'] = $this->uploadPhoto($updateData['img'], User::LOGO_PATH);
+            $updateData['img'] = User::uploadPhoto($updateData['img'], User::LOGO_PATH);
         }
 
         $user->update($updateData);

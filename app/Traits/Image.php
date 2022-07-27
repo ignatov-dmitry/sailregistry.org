@@ -8,7 +8,7 @@ use Illuminate\Http\UploadedFile;
 
 trait Image
 {
-    public function uploadPhoto(UploadedFile $file, string $logoPath): string
+    public static function uploadPhoto(UploadedFile $file, string $logoPath): string
     {
         if (isset($file)) {
             $filename = time() . '.' . $file->getClientOriginalExtension();
