@@ -9,7 +9,6 @@
                 <h3 class="card-title">Пользователи</h3>
                 <div>
                     <form method="get" class="user_filter">
-{{--                        <a href="{{ route('admin.schools.create') }}" class="btn btn-link">Добавить пользователя</a>--}}
                         <select multiple name="country_id[]" id="countries">
                             @foreach($countries as $country)
                                 <option @if(request()->get('country_id') && in_array($country->id, request()->get('country_id'))) selected @endif value="{{ $country->id }}">{{ $country->name }}</option>
@@ -24,6 +23,7 @@
                         @endrole
                         <input type="text" class="form-control search" value="{{ request('search') }}" placeholder="Поиск" name="search">
                         <button type="submit" class="btn btn-default">Искать</button>
+                        <a href="{{ route('admin.users.create') }}" class="btn btn-link">Добавить пользователя</a>
                     </form>
                 </div>
             </div>
@@ -46,7 +46,11 @@
                             <td>{{ $user->full_name }}</td>
                             <td>{{ @$user->country }}</td>
                             <td>{{ $user->birthday }}</td>
-                            <td><img class="logo" src="{{ $user->img_src }}" alt=""></td>
+                            <td>
+                                @if(isset($user->img))
+                                    <img src="{{ '/' . $user->img }}" id="photo" alt="">
+                                @endif
+                            </td>
                             <td>
                                 <div class="d-flex flex-row">
                                     <a href="{{ route('admin.users.show', $user) }}" class="btn btn-sm btn-outline-primary mr-1" target="_blank"><span class="fa fa-tv"></span></a>

@@ -4,6 +4,9 @@ namespace App\Models;
 
 use App\Traits\Image;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -107,11 +110,13 @@ class User extends Authenticatable
         $this->attributes['birthday'] =  date("Y-m-d", strtotime($value));
     }
 
-    public function roles() {
+    public function roles(): BelongsToMany
+    {
         return $this->belongsToMany(Role::class, 'user_roles');
     }
 
-    public function hasRole(... $roles) {
+    public function hasRole(... $roles): bool
+    {
         foreach ($roles as $role) {
             if ($this->roles->contains('slug', $role)) {
                 return true;
@@ -120,15 +125,23 @@ class User extends Authenticatable
         return false;
     }
 
-    public function certificates() {
+    public function certificates(): HasMany
+    {
         return $this->hasMany(UserCertificate::class);
     }
 
-    public function schools() {
+    public function schools(): BelongsToMany
+    {
         return $this->belongsToMany(School::class, 'user_roles');
     }
 
-    public function country() {
+    public function country(): HasOne
+    {
         return $this->hasOne(Country::class);
+    }
+
+    public static function checkSimilarEntries(array $userData) {
+
+        dd(self::all());
     }
 }

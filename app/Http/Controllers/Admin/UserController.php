@@ -54,8 +54,6 @@ class UserController extends Controller
             }
         }
 
-
-
         $users = $users->paginate(20, ['id']);
 
         return view('admin.user.index', compact('users', 'countries', 'schools'));
@@ -63,6 +61,7 @@ class UserController extends Controller
 
     public function create()
     {
+        //TODO В представлении есть canEdit нужно с ним разобраться
         $schoolSelectAttributes = array('id' => 'school_id');
 
         if (Auth::user()->hasRole(Role::SUPER_ADMIN)) {
@@ -87,9 +86,13 @@ class UserController extends Controller
         //TODO Проверить чтобы небыло проблем со school_id При сохранении под админом школы (добавлялась школа, а не перезаписывалась)
         $insert = $request->toArray();
 
+        User::checkSimilarEntries($insert);
+
         if (isset($insert['img'])) {
             $insert['img'] = User::uploadPhoto($insert['img'], User::LOGO_PATH);
         }
+
+        User::checkSimilarEntries($insert);
 
         $user = User::create($insert);
         $schoolRoleId = Role::whereSlug(Role::BASIC_CONTRIBUTOR)->first()->id;
@@ -185,12 +188,11 @@ class UserController extends Controller
         $user->password = Hash::make($password);
         $user->save();
 
-        Mail::send('admin.email.credentials', ['login' => $user->user_login,'password' => $password], function ($m) use ($request) {
+        Mail::send('admin.email.credentials', ['login' => $user->user_login, 'password' => $password], function ($m) use ($request) {
             $m->from('credentials@sailregistry.org', 'sailregistry.org');
-
             $m->to($request->email)->subject('Ваши доступы к системе sailregistry.org');
         });
 
-        return view('admin.email.credentials', ['login' => $user->user_login,'password' => $password]);
+        return view('admin.email.credentials', ['login' => $user->user_login, 'password' => $password]);
     }
 }

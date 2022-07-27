@@ -14,7 +14,9 @@ class UserRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'user_login' => 'unique:users',
+            'email'      => 'unique:users',
+            'country_id' => 'gt:0'
         ];
     }
 }

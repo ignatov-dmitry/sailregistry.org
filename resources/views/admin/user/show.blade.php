@@ -11,7 +11,7 @@
                 <div class="card-tools">
                     @if(Route::is('admin.users.edit'))
                         @if($user->old_id)
-                            <a href="{{ route('redirectToIytnet', $user->old_id) }}" rel="noreferrer" target="_blank">Посмотреть на iytnet</a>
+                            <a href="{{ route('redirectToIytnet', $user->old_id) }}" class="btn btn-link" rel="noreferrer" target="_blank">Посмотреть на iytnet</a>
                         @endif
                         <a href="{{ route('admin.users.show', $user) }}" class="btn btn-link" target="_blank">Перейти к профилю</a>
                     @endif
@@ -23,20 +23,38 @@
                 <div class="row">
                     <div class="col-4">
                         <div class="form-group">
-                            {!! Form::label('last_name', 'Фамилия', ['class' => 'col-form-label']); !!}
-                            {!! Form::input('text', 'last_name', old('last_name', @$user->last_name), ['class' => 'form-control', @$canEdit]) !!}
+                            {!! Form::label('last_name_en', 'Фамилия', ['class' => 'col-form-label']); !!}
+                            {!! Form::input('text', 'last_name_en', old('last_name_en', @$user->last_name_en), ['class' => 'form-control', @$canEdit]) !!}
                         </div>
                     </div>
                     <div class="col-4">
                         <div class="form-group">
-                            {!! Form::label('first_name', 'Имя', ['class' => 'col-form-label']); !!}
-                            {!! Form::input('text', 'first_name', old('first_name', @$user->first_name), ['class' => 'form-control', @$canEdit]) !!}
+                            {!! Form::label('first_name_en', 'Имя', ['class' => 'col-form-label']); !!}
+                            {!! Form::input('text', 'first_name_en', old('first_name_en', @$user->first_name_en), ['class' => 'form-control', @$canEdit]) !!}
                         </div>
                     </div>
                     <div class="col-4">
                         <div class="form-group">
-                            {!! Form::label('middle_name', 'Отчество', ['class' => 'col-form-label']); !!}
-                            {!! Form::input('text', 'middle_name', old('middle_name', @$user->middle_name), ['class' => 'form-control', @$canEdit]) !!}
+                            {!! Form::label('middle_name_en', 'Отчество', ['class' => 'col-form-label']); !!}
+                            {!! Form::input('text', 'middle_name_en', old('middle_name_en', @$user->middle_name_en), ['class' => 'form-control', @$canEdit]) !!}
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-group">
+                            {!! Form::label('last_name_ru', 'Фамилия', ['class' => 'col-form-label']); !!}
+                            {!! Form::input('text', 'last_name_ru', old('last_name_ru', @$user->last_name_ru), ['class' => 'form-control', @$canEdit]) !!}
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-group">
+                            {!! Form::label('first_name_ru', 'Имя', ['class' => 'col-form-label']); !!}
+                            {!! Form::input('text', 'first_name_ru', old('first_name_ru', @$user->first_name_ru), ['class' => 'form-control', @$canEdit]) !!}
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-group">
+                            {!! Form::label('middle_name_ru', 'Отчество', ['class' => 'col-form-label']); !!}
+                            {!! Form::input('text', 'middle_name_ru', old('middle_name_ru', @$user->middle_name_ru), ['class' => 'form-control', @$canEdit]) !!}
                         </div>
                     </div>
                     <div class="col-4">
@@ -48,14 +66,20 @@
                     <div class="col-4">
                         <div class="form-group">
                             {!! Form::label('user_login', 'Логин', ['class' => 'col-form-label']); !!}
-                            {!! Form::input('text', 'user_login', old('user_login', @$user->user_login), ['class' => 'form-control', @$canEdit]) !!}
+                            {!! Form::input('text', 'user_login', old('user_login', @$user->user_login), ['class' => $errors->has('email') ? 'form-control  is-invalid' : 'form-control', @$canEdit]) !!}
                         </div>
+                        @error('user_login')
+                            <div class="alert alert-danger">{{ $message }}</div>
+                        @enderror
                     </div>
                     <div class="col-4">
                         <div class="form-group">
                             {!! Form::label('country_id', 'Страна', ['class' => 'col-form-label']); !!}
                             {!! Form::select('country_id', $countries, old('country_id', @$user->country_id), [@$canEdit]) !!}
                         </div>
+                        @error('country_id')
+                            <div class="alert alert-danger">{{ $message }}</div>
+                        @enderror
                     </div>
                     @role('super-admin')
                     <div class="col-4">
@@ -74,8 +98,11 @@
                     <div class="col-4">
                         <div class="form-group">
                             {!! Form::label('email', 'EMAIL', ['class' => 'col-form-label']); !!}
-                            {!! Form::email('email', old('email', @$user->email), ['class' => 'form-control', @$canEdit]) !!}
+                            {!! Form::email('email', old('email', @$user->email), ['class' => $errors->has('email') ? 'form-control  is-invalid' : 'form-control', @$canEdit]) !!}
                         </div>
+                        @error('email')
+                            <div class="alert alert-danger">{{ $message }}</div>
+                        @enderror
                     </div>
                     <div class="col-4">
                         <div class="form-group">
@@ -105,7 +132,7 @@
                     @csrf
                     <div class="row">
                         <div class="col-2">
-                            <input class="form-control" type="email" placeholder="email" name="email">
+                            <input required value="{{ is_null($user->email) ? '' : $user->email }}" class="form-control" type="email" placeholder="email" name="email">
                             <div class="form-group mt-3">
                                 <button type="submit" class="btn btn-primary">Отправить логин и пароль</button>
                             </div>
