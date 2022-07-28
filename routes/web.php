@@ -1,5 +1,6 @@
 <?php
 
+use App\Classes\Transliteration;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\CertificateController;
 use App\Http\Controllers\Admin\CountryController;
@@ -8,6 +9,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\LegacyController;
 use App\Http\Controllers\StudentsController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -105,7 +107,22 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth']], 
         Route::delete('/user/destroy/{user}', [UserController::class, 'destroy'])->name('destroy');
         Route::get('/ajax/get_users_by_user_login', [UserController::class, 'getUsersByUserLogin']);
         Route::post('/user/{user}/send_credentials', [UserController::class, 'sendCredentials'])->name('send_credentials');
+
+        Route::get('/transliterationNames', function (Request $request) {
+            $transliteratedArray = [];
+            $fields = $request->all();
+
+            foreach ($fields as $key => $field) {
+                if ($field == null) continue;
+                $key = str_replace('ru', 'en', $key);
+                $transliteratedArray[$key] = Transliteration::make($field, true);
+            }
+
+            return response()->json($transliteratedArray);
+        });
     });
+
+
 });
 
 Route::get('/redirection/{old_id}', function ($old_id){

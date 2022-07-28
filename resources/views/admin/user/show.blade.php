@@ -19,42 +19,42 @@
                 </div>
             </div>
             <div class="card-body">
-                {!! Form::open(['url' => Route::is('admin.users.edit') ? route('admin.users.update', $user) : route('admin.users.store'), 'enctype' => 'multipart/form-data']) !!}
+                {!! Form::open(['url' => Route::is('admin.users.edit') ? route('admin.users.update', $user) : route('admin.users.store'), 'enctype' => 'multipart/form-data', 'id' => 'user_form']) !!}
                 <div class="row">
                     <div class="col-4">
                         <div class="form-group">
-                            {!! Form::label('last_name_en', 'Фамилия', ['class' => 'col-form-label']); !!}
-                            {!! Form::input('text', 'last_name_en', old('last_name_en', @$user->last_name_en), ['class' => 'form-control', @$canEdit]) !!}
-                        </div>
-                    </div>
-                    <div class="col-4">
-                        <div class="form-group">
-                            {!! Form::label('first_name_en', 'Имя', ['class' => 'col-form-label']); !!}
-                            {!! Form::input('text', 'first_name_en', old('first_name_en', @$user->first_name_en), ['class' => 'form-control', @$canEdit]) !!}
-                        </div>
-                    </div>
-                    <div class="col-4">
-                        <div class="form-group">
-                            {!! Form::label('middle_name_en', 'Отчество', ['class' => 'col-form-label']); !!}
-                            {!! Form::input('text', 'middle_name_en', old('middle_name_en', @$user->middle_name_en), ['class' => 'form-control', @$canEdit]) !!}
-                        </div>
-                    </div>
-                    <div class="col-4">
-                        <div class="form-group">
-                            {!! Form::label('last_name_ru', 'Фамилия', ['class' => 'col-form-label']); !!}
+                            {!! Form::label('last_name_ru', 'Фамилия (ru)', ['class' => 'col-form-label']); !!}
                             {!! Form::input('text', 'last_name_ru', old('last_name_ru', @$user->last_name_ru), ['class' => 'form-control', @$canEdit]) !!}
                         </div>
                     </div>
                     <div class="col-4">
                         <div class="form-group">
-                            {!! Form::label('first_name_ru', 'Имя', ['class' => 'col-form-label']); !!}
+                            {!! Form::label('first_name_ru', 'Имя (ru)', ['class' => 'col-form-label']); !!}
                             {!! Form::input('text', 'first_name_ru', old('first_name_ru', @$user->first_name_ru), ['class' => 'form-control', @$canEdit]) !!}
                         </div>
                     </div>
                     <div class="col-4">
                         <div class="form-group">
-                            {!! Form::label('middle_name_ru', 'Отчество', ['class' => 'col-form-label']); !!}
+                            {!! Form::label('middle_name_ru', 'Отчество (ru)', ['class' => 'col-form-label']); !!}
                             {!! Form::input('text', 'middle_name_ru', old('middle_name_ru', @$user->middle_name_ru), ['class' => 'form-control', @$canEdit]) !!}
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-group">
+                            {!! Form::label('last_name_en', 'Фамилия (en)', ['class' => 'col-form-label']); !!}
+                            {!! Form::input('text', 'last_name_en', old('last_name_en', @$user->last_name_en), ['class' => 'form-control', @$canEdit]) !!}
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-group">
+                            {!! Form::label('first_name_en', 'Имя (en)', ['class' => 'col-form-label']); !!}
+                            {!! Form::input('text', 'first_name_en', old('first_name_en', @$user->first_name_en), ['class' => 'form-control', @$canEdit]) !!}
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-group">
+                            {!! Form::label('middle_name_en', 'Отчество (en)', ['class' => 'col-form-label']); !!}
+                            {!! Form::input('text', 'middle_name_en', old('middle_name_en', @$user->middle_name_en), ['class' => 'form-control', @$canEdit]) !!}
                         </div>
                     </div>
                     <div class="col-4">

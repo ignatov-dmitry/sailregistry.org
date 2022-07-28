@@ -20,6 +20,11 @@
     <link href="{{ mix('css/admin.css') }}" rel="stylesheet">
 </head>
     <body class="hold-transition sidebar-mini">
+    <div class="preload">
+        <div class="spinner-border text-primary" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
         <div class="wrapper">
             <nav class="main-header navbar navbar-expand navbar-white navbar-light">
                 <ul class="navbar-nav">

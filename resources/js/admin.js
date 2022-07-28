@@ -18,6 +18,27 @@ $(document).ready(function (){
         }
     });
 
+    $('#user_form').submit(function (e){
+        e.preventDefault();
+        let ruFields = $('input[name$="name_ru"]');
+
+        $.ajax({
+            url: '/admin/users/transliterationNames',
+            dataType: 'json',
+            data: ruFields,
+            beforeSend: function (){
+                $('.preload').css('display', 'block');
+            },
+            success: function (data) {
+                $.each(data, function (item, value){
+                    $('#' + item).val(value);
+                });
+
+                $('.preload').css('display', 'none');
+            }
+        });
+    });
+
     $('#certificate_type_parent_id').selectize({placeholder: 'Родительский сертификат'});
     $('#country_id').selectize({placeholder: 'Страна'});
 
@@ -25,6 +46,28 @@ $(document).ready(function (){
         placeholder: 'Введите логин',
         plugins: ["remove_button"]
     });
+
+    if (school_admin[0] !== undefined) {
+        let selectize_school_admin = school_admin[0].selectize;
+
+        $('#admin_id-selectized').keyup(function () {
+            let search = $(this).val();
+
+            if (search.length > 2) {
+                $.ajax({
+                    url: '/admin/users/ajax/get_users_by_user_login',
+                    data: {user_login: $(this).val()},
+                    success: function (users) {
+                        selectize_school_admin.clearOptions();
+                        $.each(users, function (index, value) {
+                            selectize_school_admin.addOption({value: value['id'], text: value['user_login']});
+                        });
+                        selectize_school_admin.refreshOptions();
+                    }
+                });
+            }
+        });
+    }
 
     $('#is_active').selectize({
         placeholder: 'Активация'
@@ -53,25 +96,6 @@ $(document).ready(function (){
 
     $('#source').selectize({
         placeholder: 'Источник'
-    });
-    let selectize_school_admin = school_admin[0].selectize;
-
-    $('#admin_id-selectized').keyup(function () {
-        let search = $(this).val();
-
-        if (search.length > 2) {
-            $.ajax({
-                url: '/admin/users/ajax/get_users_by_user_login',
-                data: {user_login: $(this).val()},
-                success: function (users) {
-                    selectize_school_admin.clearOptions();
-                    $.each(users, function (index, value) {
-                        selectize_school_admin.addOption({value: value['id'], text: value['user_login']});
-                    });
-                    selectize_school_admin.refreshOptions();
-                }
-            });
-        }
     });
 
     $('#phone').mask('+7 (000) 000-00-00');
