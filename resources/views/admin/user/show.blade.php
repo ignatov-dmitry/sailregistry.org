@@ -15,7 +15,6 @@
                         @endif
                         <a href="{{ route('admin.users.show', $user) }}" class="btn btn-link" target="_blank">Перейти к профилю</a>
                     @endif
-                    <a href="{{ route('admin.users.create') }}" class="btn btn-link">Добавить пользователя</a>
                 </div>
             </div>
             <div class="card-body">
