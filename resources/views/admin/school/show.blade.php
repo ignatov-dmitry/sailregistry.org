@@ -16,13 +16,13 @@
             <div class="card-body">
                 <form method="POST" action="{{ Route::is('admin.schools.edit') ? route('admin.schools.update', $school) : route('admin.schools.store') }}" enctype="multipart/form-data">
                     @csrf
-                    <input name="school_id" type="hidden" value="{{ $school->id }}">
+                    <input name="school_id" type="hidden" value="{{ @$school->id }}">
                     @method('POST')
                     <div class="row">
                         <div class="col-4">
                             <div class="form-group">
                                 <label for="name" class="col-form-label">Название (eng)</label>
-                                <input id="name" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name', $school->name) }}" >
+                                <input id="name" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name', @$school->name) }}" >
                                 @error('name')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -33,7 +33,7 @@
                         <div class="col-4">
                             <div class="form-group">
                                 <label for="name_rus" class="col-form-label">Название</label>
-                                <input id="name_rus" class="form-control @error('name_rus') is-invalid @enderror" name="name_rus" value="{{ old('name_rus', $school->name_rus) }}" >
+                                <input id="name_rus" class="form-control @error('name_rus') is-invalid @enderror" name="name_rus" value="{{ old('name_rus', @$school->name_rus) }}" >
                                 @error('name_rus')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -47,7 +47,7 @@
                                 <select id="country_id" class=" @error('country_id') is-invalid @enderror" name="country_id" >
                                     <option value="">-</option>
                                     @foreach($countries as $country)
-                                        <option @if($school->country_id == $country->id) selected @endif value="{{ $country->id }}">{{ $country->name }}</option>
+                                        <option @if(@$school->country_id == $country->id) selected @endif value="{{ $country->id }}">{{ $country->name }}</option>
                                     @endforeach
                                 </select>
                                 @error('country_id')
@@ -60,7 +60,7 @@
                         <div class="col-4">
                             <div class="form-group">
                                 <label for="applicants" class="col-form-label">Applicants</label>
-                                <input id="applicants" class="form-control @error('applicants') is-invalid @enderror" name="applicants" value="{{ old('applicants', $school->applicants) }}" >
+                                <input id="applicants" class="form-control @error('applicants') is-invalid @enderror" name="applicants" value="{{ old('applicants', @$school->applicants) }}" >
                                 @error('applicants')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -71,7 +71,7 @@
                         <div class="col-4">
                             <div class="form-group">
                                 <label for="phone" class="col-form-label">Телефон</label>
-                                <input id="phone" class="form-control @error('phone') is-invalid @enderror" name="phone" value="{{ old('phone', $school->phone) }}" >
+                                <input id="phone" class="form-control @error('phone') is-invalid @enderror" name="phone" value="{{ old('phone', @$school->phone) }}" >
                                 @error('phone')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -82,7 +82,7 @@
                         <div class="col-4">
                             <div class="form-group">
                                 <label for="email" class="col-form-label">EMAIL</label>
-                                <input id="email" class="form-control @error('email') is-invalid @enderror" name="email" type="email" value="{{ old('email', $school->email) }}" >
+                                <input id="email" class="form-control @error('email') is-invalid @enderror" name="email" type="email" value="{{ old('email', @$school->email) }}" >
                                 @error('email')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -93,7 +93,7 @@
                         <div class="col-4">
                             <div class="form-group">
                                 <label for="website" class="col-form-label">Сайт</label>
-                                <input id="website" class="form-control @error('website') is-invalid @enderror" name="website" value="{{ old('website', $school->website) }}" >
+                                <input id="website" class="form-control @error('website') is-invalid @enderror" name="website" value="{{ old('website', @$school->website) }}" >
                                 @error('website')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -104,7 +104,7 @@
                         <div class="col-4">
                             <div class="form-group">
                                 <label for="address" class="col-form-label">Адрес</label>
-                                <input id="address" class="form-control @error('address') is-invalid @enderror" name="address" value="{{ old('address', $school->address) }}" >
+                                <input id="address" class="form-control @error('address') is-invalid @enderror" name="address" value="{{ old('address', @$school->address) }}" >
                                 @error('address')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -131,7 +131,7 @@
                         <div class="col-12">
                             <div class="form-group">
                                 <label for="description" class="col-form-label">Описание</label>
-                                <textarea id="description" class="form-control" name="description" >{{ old('description', $school->description) }}</textarea>
+                                <textarea id="description" class="form-control" name="description" >{{ old('description', @$school->description) }}</textarea>
                             </div>
                         </div>
                         <div class="col-4">
@@ -139,7 +139,7 @@
                                 <label for="is_active" class="col-form-label">Активация</label>
                                 <select id="is_active" name="is_active">
                                     <option value="1">Да</option>
-                                    <option @if(!$school->is_active) selected @endif value="0">Нет</option>
+                                    <option @if(@!$school->is_active) selected @endif value="0">Нет</option>
                                 </select>
                             </div>
                         </div>
@@ -147,14 +147,15 @@
                     <div class="row">
                         <div class="col-4">
                             <div class="form-group">
-                                <label for="admin_id" class="col-form-label">Администратор школы</label>
-                                <select multiple required id="admin_id" name="admin_id[]">
-                                    @foreach($admins as $admin)
-                                        @isset($admin->user_id)
-                                            <option selected value="{{ $admin->user_id }}">{{ $admin->user->user_login }}</option>
-                                        @endisset
-                                    @endforeach
-                                </select>
+                                {!! Form::label('admin_id', 'Администратор школы', ['class' => 'col-form-label']); !!}
+                                {!! Form::select('admin_id[]', $admins, old('admin_id', @array_keys($admins)), ['id' => 'admin_id', 'multiple']) !!}
+{{--                                <select multiple required id="admin_id" name="admin_id[]">--}}
+{{--                                    @foreach($admins as $admin)--}}
+{{--                                        @isset($admin->user_id)--}}
+{{--                                            <option selected value="{{ $admin->user_id }}">{{ $admin->user->user_login }}</option>--}}
+{{--                                        @endisset--}}
+{{--                                    @endforeach--}}
+{{--                                </select>--}}
                             </div>
                         </div>
                     </div>

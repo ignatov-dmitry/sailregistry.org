@@ -16,7 +16,8 @@ class UserRequest extends FormRequest
         return [
             'user_login' => 'unique:users',
             'email'      => 'unique:users',
-            'country_id' => 'gt:0'
+            'country_id' => 'gt:0',
+            'img'        => 'image|mimes:jpg,jpeg,png,gif|max:2048'
         ];
     }
 }

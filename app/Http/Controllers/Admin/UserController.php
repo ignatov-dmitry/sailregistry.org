@@ -36,9 +36,12 @@ class UserController extends Controller
         foreach ($request->toArray() as $key => $item) {
             if ($key == 'search') {
                 $users = $users->where(function ($query) use ($likeStr){
-                    $query->orWhere('first_name', 'like', $likeStr);
-                    $query->orWhere('middle_name', 'like', $likeStr);
-                    $query->orWhere('last_name', 'like', $likeStr);
+                    $query->orWhere('first_name_en', 'like', $likeStr);
+                    $query->orWhere('middle_name_en', 'like', $likeStr);
+                    $query->orWhere('last_name_en', 'like', $likeStr);
+                    $query->orWhere('first_name_ru', 'like', $likeStr);
+                    $query->orWhere('middle_name_ru', 'like', $likeStr);
+                    $query->orWhere('last_name_ru', 'like', $likeStr);
                     $query->orWhere('email', 'like', $likeStr);
                 });
             }

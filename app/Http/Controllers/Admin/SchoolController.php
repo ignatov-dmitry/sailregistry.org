@@ -28,12 +28,13 @@ class SchoolController extends Controller
         return view('admin.school.index', compact('schools'));
     }
 
-    public function create(School $school)
+    public function create()
     {
         //TODO Сделать проверку чтобы не выводились пользователи которые являются админами школ
         $countries = Country::all();
-        $admins = $school->schoolAdmin()->where('role_id', '=', 3)->get();
-        return view('admin.school.show', compact('school', 'countries', 'admins'));
+        $admins = [];
+
+        return view('admin.school.show', compact( 'countries', 'admins'));
     }
 
 
@@ -50,9 +51,10 @@ class SchoolController extends Controller
 
         $school = School::create($insert);
 
-        $requestAdmin = User::whereId($insert['admin_id'])->first();
-
-        $requestAdmin->roles()->sync([Role::whereSlug(Role::SCHOOL_ADMIN)->first(['id'])->id => ['school_id' => $school->id]]);
+        if (isset($insert['admin_id'])) {
+            $requestAdmin = User::whereId($insert['admin_id'])->first();
+            $requestAdmin->roles()->sync([Role::whereSlug(Role::SCHOOL_ADMIN)->first(['id'])->id => ['school_id' => $school->id]]);
+        }
 
         return response()->redirectToRoute('admin.schools.edit', $school);
     }
@@ -68,7 +70,13 @@ class SchoolController extends Controller
     {
         //TODO Сделать проверку чтобы не выводились пользователи которые являются админами школ
         $countries = Country::all();
-        $admins = $school->schoolAdmin()->where('role_id', '=', 3)->get();
+        $admins = $school->schoolAdmin()
+            ->select(['user_id', 'user_login'])
+            ->leftJoin('users', 'users.id', '=', 'user_roles.user_id')
+            ->where('role_id', '=', 3)
+            ->get()->toArray();
+
+        $admins = array_combine(array_column($admins, 'user_id'), array_column($admins, 'user_login'));
         return view('admin.school.show', compact('school', 'countries', 'admins'));
     }
 

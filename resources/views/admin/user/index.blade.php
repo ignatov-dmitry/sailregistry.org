@@ -43,7 +43,7 @@
                     @foreach($users as $user)
                         <tr>
                             <td>{{ $user->id }}</td>
-                            <td>{{ $user->full_name }}</td>
+                            <td><a href="{{ route('admin.users.edit', $user) }}">{{ $user->full_name }}</a></td>
                             <td>{{ @$user->country }}</td>
                             <td>{{ $user->birthday }}</td>
                             <td>
@@ -54,7 +54,6 @@
                             <td>
                                 <div class="d-flex flex-row">
                                     <a href="{{ route('admin.users.show', $user) }}" class="btn btn-sm btn-outline-primary mr-1" target="_blank"><span class="fa fa-tv"></span></a>
-                                    <a href="{{ route('admin.users.edit', $user) }}" class="btn btn-sm btn-outline-primary mr-1"><span class="fa fa-pen"></span></a>
                                 </div>
                             </td>
                         </tr>

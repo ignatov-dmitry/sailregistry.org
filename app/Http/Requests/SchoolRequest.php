@@ -15,12 +15,13 @@ class SchoolRequest extends FormRequest
      */
     public function rules()
     {
-        //dd($this->all());
         return [
-            'name'  => 'required',
-            'email' => ['required', Rule::unique('schools')->ignore($this->get('school_id'))],
-            'phone' => 'required',
-            'logo'  => 'image|mimes:jpg,jpeg,png,gif|max:2048'
+            'name'       => 'required',
+            'name_rus'   => 'required',
+            'logo'       => 'image|mimes:jpg,jpeg,png,gif|max:2048',
+            'country_id' => 'gt:0',
+            //'email' => ['required', Rule::unique('schools')->ignore($this->get('school_id'))],
+            //'phone' => 'required',
         ];
     }
 }
