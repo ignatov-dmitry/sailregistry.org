@@ -41,19 +41,19 @@
                     <div class="col-4">
                         <div class="form-group">
                             {!! Form::label('last_name_en', 'Фамилия (en)', ['class' => 'col-form-label']); !!}
-                            {!! Form::input('text', 'last_name_en', old('last_name_en', @$user->last_name_en), ['class' => 'form-control', @$canEdit]) !!}
+                            {!! Form::input('text', 'last_name_en', old('last_name_en', @$user->last_name_en), ['class' => 'form-control', 'placeholder' => 'Заполняется автоматически', 'readonly']) !!}
                         </div>
                     </div>
                     <div class="col-4">
                         <div class="form-group">
                             {!! Form::label('first_name_en', 'Имя (en)', ['class' => 'col-form-label']); !!}
-                            {!! Form::input('text', 'first_name_en', old('first_name_en', @$user->first_name_en), ['class' => 'form-control', @$canEdit]) !!}
+                            {!! Form::input('text', 'first_name_en', old('first_name_en', @$user->first_name_en), ['class' => 'form-control', 'placeholder' => 'Заполняется автоматически', 'readonly']) !!}
                         </div>
                     </div>
                     <div class="col-4">
                         <div class="form-group">
                             {!! Form::label('middle_name_en', 'Отчество (en)', ['class' => 'col-form-label']); !!}
-                            {!! Form::input('text', 'middle_name_en', old('middle_name_en', @$user->middle_name_en), ['class' => 'form-control', @$canEdit]) !!}
+                            {!! Form::input('text', 'middle_name_en', old('middle_name_en', @$user->middle_name_en), ['class' => 'form-control', 'placeholder' => 'Заполняется автоматически', 'readonly']) !!}
                         </div>
                     </div>
                     <div class="col-4">
@@ -143,4 +143,46 @@
             </div>
         </div>
     </section>
+{{--    <section class="content">--}}
+{{--        <div class="card">--}}
+{{--            <div class="card-header">--}}
+{{--                <h3 class="card-title">Похожие пользователи</h3>--}}
+{{--            </div>--}}
+{{--            <div class="card-body">--}}
+{{--                <table class="users table table-bordered table-striped table-responsive-stack mb-3" id="tableOne">--}}
+{{--                    <thead>--}}
+{{--                    <tr>--}}
+{{--                        <th>#</th>--}}
+{{--                        <th>Имя</th>--}}
+{{--                        <th>Страна</th>--}}
+{{--                        <th>Дата рождени</th>--}}
+{{--                        <th>Фото</th>--}}
+{{--                        <th></th>--}}
+{{--                    </tr>--}}
+{{--                    </thead>--}}
+{{--                    <tbody>--}}
+{{--                    @foreach($users as $user)--}}
+{{--                        <tr>--}}
+{{--                            <td>{{ $user->id }}</td>--}}
+{{--                            <td><a href="{{ route('admin.users.edit', $user) }}">{{ $user->full_name }}</a></td>--}}
+{{--                            <td>{{ @$user->country }}</td>--}}
+{{--                            <td>{{ $user->birthday }}</td>--}}
+{{--                            <td>--}}
+{{--                                @if(isset($user->img))--}}
+{{--                                    <img src="{{ '/' . $user->img }}" id="photo" alt="">--}}
+{{--                                @endif--}}
+{{--                            </td>--}}
+{{--                            <td>--}}
+{{--                                <div class="d-flex flex-row">--}}
+{{--                                    <a href="{{ route('admin.users.show', $user) }}" class="btn btn-sm btn-outline-primary mr-1" target="_blank"><span class="fa fa-tv"></span></a>--}}
+{{--                                </div>--}}
+{{--                            </td>--}}
+{{--                        </tr>--}}
+{{--                    @endforeach--}}
+{{--                    </tbody>--}}
+{{--                </table>--}}
+{{--                {{$users->appends(request()->all())->links()}}--}}
+{{--            </div>--}}
+{{--        </div>--}}
+{{--    </section>--}}
 @endsection

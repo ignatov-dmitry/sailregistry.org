@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Classes\Corrector;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserRequest;
 use App\Models\Country;
@@ -94,8 +95,6 @@ class UserController extends Controller
         if (isset($insert['img'])) {
             $insert['img'] = User::uploadPhoto($insert['img'], User::LOGO_PATH);
         }
-
-        User::checkSimilarEntries($insert);
 
         $user = User::create($insert);
         $schoolRoleId = Role::whereSlug(Role::BASIC_CONTRIBUTOR)->first()->id;

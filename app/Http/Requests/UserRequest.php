@@ -14,10 +14,12 @@ class UserRequest extends FormRequest
     public function rules()
     {
         return [
-            'user_login' => 'unique:users',
-            'email'      => 'unique:users',
-            'country_id' => 'gt:0',
-            'img'        => 'image|mimes:jpg,jpeg,png,gif|max:2048'
+            'last_name_ru'  => 'required',
+            'first_name_ru' => 'required',
+            'user_login'    => 'unique:users',
+            'email'         => 'unique:users',
+            'country_id'    => 'gt:0',
+            'img'           => 'image|mimes:jpg,jpeg,png,gif|max:2048'
         ];
     }
 }

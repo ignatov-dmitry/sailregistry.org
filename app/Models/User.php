@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Classes\Corrector;
 use App\Traits\Image;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -141,7 +142,24 @@ class User extends Authenticatable
     }
 
     public static function checkSimilarEntries(array $userData) {
+        $users = User::all()->toArray();
+        $corrector = new Corrector();
+        $corrector->setWords(array_column($users, 'first_name_en'));
+        $firstNameEnArray = $corrector->correctWord([$userData['first_name_en']]);
 
-        dd(self::all());
+        $corrector->setWords(array_column($users, 'last_name_en'));
+        $lastNameEnArray = $corrector->correctWord([$userData['last_name_en']]);
+
+        $corrector->setWords(array_column($users, 'first_name_ru'));
+        $firstNameRuArray = $corrector->correctWord([$userData['first_name_ru']]);
+
+        $corrector->setWords(array_column($users, 'last_name_ru'));
+        $lastNameRuArray = $corrector->correctWord([$userData['last_name_ru']]);
+
+
+        dd($firstNameEnArray, $lastNameEnArray, $firstNameRuArray, $lastNameRuArray);
+
+
+        return [];
     }
 }

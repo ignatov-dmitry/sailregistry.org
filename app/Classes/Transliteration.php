@@ -3,7 +3,7 @@
 namespace App\Classes;
 
 
-final class Transliteration
+class Transliteration
 {
     private const dictionary = [
         "А" => "A",
@@ -90,6 +90,11 @@ final class Transliteration
         "!" => ""
     ];
 
+    public static function getDictionary(): array
+    {
+        return self::dictionary;
+    }
+
     /**
      * @param string $title
      * @param bool $ucFirst
@@ -97,14 +102,12 @@ final class Transliteration
      */
     public static function make(string $title, $ucFirst = false): string
     {
-        foreach (self::dictionary as $ru => $en)  {
-            $title = mb_eregi_replace($ru, $en, $title);
-        }
+        $title = strtr($title, self::dictionary);
 
-        $title = mb_strtolower($title);
-
-        if ($ucFirst)
+        if ($ucFirst) {
+            $title = mb_strtolower($title);
             $title = ucfirst($title);
+        }
 
         return str_replace(' ', '-', $title);
     }

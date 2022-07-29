@@ -33,8 +33,8 @@ $(document).ready(function (){
                 $.each(data, function (item, value){
                     $('#' + item).val(value);
                 });
-
                 $('.preload').css('display', 'none');
+                $('#user_form').unbind('submit').submit();
             }
         });
     });
