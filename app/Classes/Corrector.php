@@ -49,44 +49,48 @@ class Corrector extends Transliteration
 
                 //Считаем максимальное значение подобности слов
                 foreach($possibleWord as $n) {
-                    if(levenshtein($k, $enteredWord) == $min_levenshtein) {
+                    if(levenshtein($n, $enteredWord) == $min_levenshtein) {
                         $similarity = max($similarity, similar_text($n, $enteredWord));
                     }
                 }
 
                 $result = NULL;
-
-                //Проверка всего слова
-                foreach($possibleWord as $n=>$k) {
-                    if(levenshtein($k, $enteredWord) <= $min_levenshtein) {
-                        if(similar_text($k, $enteredWord) >= $similarity) {
-                            $result[$n] = $k;
-                        }
-                    }
-                }
-
-                foreach($result as $n) {
-                    $meta_min_levenshtein = min($meta_min_levenshtein, levenshtein(metaphone($n), metaphone($enteredWord)));
-                }
-
-                //Считаем максимальное значение подобности слов
-                foreach($result as $n) {
-                    if(levenshtein($k, $enteredWord) == $meta_min_levenshtein) {
-                        $meta_similarity = max($meta_similarity, similar_text(metaphone($n), metaphone($enteredWord)));
-                    }
-                }
-
                 $meta_result = NULL;
 
-                //Проверка через метафон
-                foreach($result as $n=>$k) {
-                    if(levenshtein(metaphone($k), metaphone($enteredWord)) <= $meta_min_levenshtein) {
-                        if(similar_text(metaphone($k), metaphone($enteredWord)) >= $meta_similarity) {
-                            $meta_result[$n] = $k;
+                //Проверка всего слова
+                foreach($possibleWord as $n => $k) {
+                    //if(levenshtein($k, $enteredWord) <= $min_levenshtein + 100) {
+                        if(similar_text($k, $enteredWord) >= $similarity - 1) {
+                            $result[$n] = $k;
                         }
-                    }
+                    //}
                 }
-                $correct[] .= key($meta_result);
+
+                $meta_result = $result;
+//dd( $result);
+//                foreach($result as $n) {
+//                    $meta_min_levenshtein = min($meta_min_levenshtein, levenshtein(metaphone($n), metaphone($enteredWord)));
+//                }
+//
+//                //Считаем максимальное значение подобности слов
+//                foreach($result as $n) {
+//                    if(levenshtein($k, $enteredWord) == $meta_min_levenshtein) {
+//                        $meta_similarity = max($meta_similarity, similar_text(metaphone($n), metaphone($enteredWord)));
+//                    }
+//                }
+//
+//
+//
+//                //Проверка через метафон
+//                foreach($result as $n => $k) {
+//                    if(levenshtein(metaphone($k), metaphone($enteredWord)) <= $meta_min_levenshtein + 1) {
+//                        if(similar_text(metaphone($k), metaphone($enteredWord)) >= $meta_similarity) {
+//                            $meta_result[$n] = $k;
+//                        }
+//                    }
+//                }
+
+                $correct = array_merge($correct, array_keys($meta_result));
             }
             else {
                 $correct[] .= $myWord;

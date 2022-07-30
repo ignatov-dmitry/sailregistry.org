@@ -144,20 +144,21 @@ class User extends Authenticatable
     public static function checkSimilarEntries(array $userData) {
         $users = User::all()->toArray();
         $corrector = new Corrector();
+
         $corrector->setWords(array_column($users, 'first_name_en'));
         $firstNameEnArray = $corrector->correctWord([$userData['first_name_en']]);
 
-        $corrector->setWords(array_column($users, 'last_name_en'));
-        $lastNameEnArray = $corrector->correctWord([$userData['last_name_en']]);
+//        $corrector->setWords(array_column($users, 'last_name_en'));
+//        $lastNameEnArray = $corrector->correctWord([$userData['last_name_en']]);
+//
+//        $corrector->setWords(array_column($users, 'first_name_ru'));
+//        $firstNameRuArray = $corrector->correctWord([$userData['first_name_ru']]);
+//
+//        $corrector->setWords(array_column($users, 'last_name_ru'));
+//        $lastNameRuArray = $corrector->correctWord([$userData['last_name_ru']]);
 
-        $corrector->setWords(array_column($users, 'first_name_ru'));
-        $firstNameRuArray = $corrector->correctWord([$userData['first_name_ru']]);
 
-        $corrector->setWords(array_column($users, 'last_name_ru'));
-        $lastNameRuArray = $corrector->correctWord([$userData['last_name_ru']]);
-
-
-        dd($firstNameEnArray, $lastNameEnArray, $firstNameRuArray, $lastNameRuArray);
+        dd($firstNameEnArray, $userData['first_name_en']);
 
 
         return [];
