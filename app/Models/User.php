@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Classes\Corrector;
 use App\Traits\Image;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -107,7 +108,8 @@ class User extends Authenticatable
 
     public const LOGO_PATH = 'images/photos';
 
-    public function setBirthdayAttribute($value){
+    public function setBirthdayAttribute($value)
+    {
         $this->attributes['birthday'] =  date("Y-m-d", strtotime($value));
     }
 
@@ -141,26 +143,45 @@ class User extends Authenticatable
         return $this->hasOne(Country::class);
     }
 
-    public static function checkSimilarEntries(array $userData) {
-        $users = User::all()->toArray();
-        $corrector = new Corrector();
+    public static function checkSimilarEntries(array $userData): Collection|array
+    {
+        $users = User::selectRaw('LOWER(first_name_en) as first_name_en, LOWER(last_name_en) as last_name_en, LOWER(first_name_ru) as first_name_ru, LOWER(last_name_ru) as last_name_ru')
+            ->get()
+            ->toArray();
 
-        $corrector->setWords(array_column($users, 'first_name_en'));
+        $corrector = new Corrector(array_column($users, 'first_name_en'));
+
         $firstNameEnArray = $corrector->correctWord([$userData['first_name_en']]);
 
-//        $corrector->setWords(array_column($users, 'last_name_en'));
-//        $lastNameEnArray = $corrector->correctWord([$userData['last_name_en']]);
-//
-//        $corrector->setWords(array_column($users, 'first_name_ru'));
-//        $firstNameRuArray = $corrector->correctWord([$userData['first_name_ru']]);
-//
-//        $corrector->setWords(array_column($users, 'last_name_ru'));
-//        $lastNameRuArray = $corrector->correctWord([$userData['last_name_ru']]);
+        $corrector->setWords(array_column($users, 'last_name_en'));
+        $lastNameEnArray = $corrector->correctWord([$userData['last_name_en']]);
+
+        $corrector->setWords(array_column($users, 'first_name_ru'));
+        $firstNameRuArray = $corrector->correctWord([$userData['first_name_ru']]);
+
+        $corrector->setWords(array_column($users, 'last_name_ru'));
+        $lastNameRuArray = $corrector->correctWord([$userData['last_name_ru']]);
+
+        $similarUsers = User::where(function ($query) use ($firstNameEnArray, $lastNameEnArray){
+            $query->where(function ($subQuery) use ($firstNameEnArray, $lastNameEnArray){
+                $subQuery->whereIn('first_name_en', $firstNameEnArray)->whereIn('last_name_en', $lastNameEnArray);
+            });
+
+            $query->orWhere(function ($subQuery) use ($firstNameEnArray, $lastNameEnArray){
+                $subQuery->whereIn('first_name_en', $firstNameEnArray)->whereIn('middle_name_en', $lastNameEnArray);
+            });
+        })
+        ->orWhere(function ($query) use ($firstNameRuArray, $lastNameRuArray){
+            $query->where(function ($subQuery) use ($firstNameRuArray, $lastNameRuArray){
+                $subQuery->whereIn('first_name_ru', $firstNameRuArray)->whereIn('last_name_ru', $lastNameRuArray);
+            });
+
+            $query->orWhere(function ($subQuery) use ($firstNameRuArray, $lastNameRuArray){
+                $subQuery->whereIn('first_name_ru', $firstNameRuArray)->whereIn('middle_name_ru', $lastNameRuArray);
+            });
+        });
 
 
-        dd($firstNameEnArray, $userData['first_name_en']);
-
-
-        return [];
+        return $similarUsers->get();
     }
 }

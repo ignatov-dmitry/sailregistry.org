@@ -63,9 +63,14 @@ class UserController extends Controller
         return view('admin.user.index', compact('users', 'countries', 'schools'));
     }
 
-    public function create()
+    public function create(Request $request)
     {
         //TODO В представлении есть canEdit нужно с ним разобраться
+        $similarUsers = null;
+        if ($similarIds = $request->get('similarIds')){
+            $similarUsers = User::whereIn('id', $similarIds)->get();
+        }
+
         $schoolSelectAttributes = array('id' => 'school_id');
 
         if (Auth::user()->hasRole(Role::SUPER_ADMIN)) {
@@ -82,7 +87,7 @@ class UserController extends Controller
         $schools = array_combine(array_column($schools, 'id'), array_column($schools, 'name'));
         array_unshift($schools, '');
 
-        return view('admin.user.show', compact('countries', 'schools', 'schoolSelectAttributes'));
+        return view('admin.user.show', compact('countries', 'schools', 'schoolSelectAttributes', 'similarUsers'));
     }
 
     public function store(UserRequest $request)
@@ -90,7 +95,12 @@ class UserController extends Controller
         //TODO Проверить чтобы небыло проблем со school_id При сохранении под админом школы (добавлялась школа, а не перезаписывалась)
         $insert = $request->toArray();
 
-        User::checkSimilarEntries($insert);
+        $similarUsers = User::checkSimilarEntries($insert)->toArray();
+
+        if (count($similarUsers)){
+            $request->flash();
+            return redirect()->action([UserController::class, 'create'], ['similarIds' => array_column($similarUsers, 'id')]);
+        }
 
         if (isset($insert['img'])) {
             $insert['img'] = User::uploadPhoto($insert['img'], User::LOGO_PATH);
@@ -105,6 +115,7 @@ class UserController extends Controller
         else {
             $user->roles()->sync([$schoolRoleId => ['school_id' => Auth::user()->schools->first()->id]]);
         }
+
 
         return response()->redirectToRoute('admin.users.edit', $user);
     }
@@ -196,5 +207,9 @@ class UserController extends Controller
         });
 
         return view('admin.email.credentials', ['login' => $user->user_login, 'password' => $password]);
+    }
+
+    public function checkSimilar(UserRequest $request) {
+
     }
 }

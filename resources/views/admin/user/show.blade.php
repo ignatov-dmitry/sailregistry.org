@@ -143,46 +143,48 @@
             </div>
         </div>
     </section>
-{{--    <section class="content">--}}
-{{--        <div class="card">--}}
-{{--            <div class="card-header">--}}
-{{--                <h3 class="card-title">Похожие пользователи</h3>--}}
-{{--            </div>--}}
-{{--            <div class="card-body">--}}
-{{--                <table class="users table table-bordered table-striped table-responsive-stack mb-3" id="tableOne">--}}
-{{--                    <thead>--}}
-{{--                    <tr>--}}
-{{--                        <th>#</th>--}}
-{{--                        <th>Имя</th>--}}
-{{--                        <th>Страна</th>--}}
-{{--                        <th>Дата рождени</th>--}}
-{{--                        <th>Фото</th>--}}
-{{--                        <th></th>--}}
-{{--                    </tr>--}}
-{{--                    </thead>--}}
-{{--                    <tbody>--}}
-{{--                    @foreach($users as $user)--}}
-{{--                        <tr>--}}
-{{--                            <td>{{ $user->id }}</td>--}}
-{{--                            <td><a href="{{ route('admin.users.edit', $user) }}">{{ $user->full_name }}</a></td>--}}
-{{--                            <td>{{ @$user->country }}</td>--}}
-{{--                            <td>{{ $user->birthday }}</td>--}}
-{{--                            <td>--}}
-{{--                                @if(isset($user->img))--}}
-{{--                                    <img src="{{ '/' . $user->img }}" id="photo" alt="">--}}
-{{--                                @endif--}}
-{{--                            </td>--}}
-{{--                            <td>--}}
-{{--                                <div class="d-flex flex-row">--}}
-{{--                                    <a href="{{ route('admin.users.show', $user) }}" class="btn btn-sm btn-outline-primary mr-1" target="_blank"><span class="fa fa-tv"></span></a>--}}
-{{--                                </div>--}}
-{{--                            </td>--}}
-{{--                        </tr>--}}
-{{--                    @endforeach--}}
-{{--                    </tbody>--}}
-{{--                </table>--}}
-{{--                {{$users->appends(request()->all())->links()}}--}}
-{{--            </div>--}}
-{{--        </div>--}}
-{{--    </section>--}}
+
+    @if($similarUsers)
+    <section class="content">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Похожие пользователи</h3>
+            </div>
+            <div class="card-body">
+                <table class="users table table-bordered table-striped table-responsive-stack mb-3" id="tableOne">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Имя</th>
+                        <th>Страна</th>
+                        <th>Дата рождени</th>
+                        <th>Фото</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach($similarUsers as $user)
+                        <tr>
+                            <td>{{ $user->id }}</td>
+                            <td><a href="{{ route('admin.users.edit', $user) }}">{{ $user->full_name }}</a></td>
+                            <td>{{ @$user->country }}</td>
+                            <td>{{ $user->birthday }}</td>
+                            <td>
+                                @if(isset($user->img))
+                                    <img src="{{ '/' . $user->img }}" id="photo" alt="">
+                                @endif
+                            </td>
+                            <td>
+                                <div class="d-flex flex-row">
+                                    <a href="{{ route('admin.users.show', $user) }}" class="btn btn-sm btn-outline-primary mr-1" target="_blank"><span class="fa fa-tv"></span></a>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+    @endif
 @endsection

@@ -7,6 +7,11 @@ class Corrector extends Transliteration
 {
     private array $words = array();
 
+    public function __construct(array $words = array())
+    {
+        $this->setWords($words);
+    }
+
     public function setWords(array $words)
     {
         $this->words = array();
@@ -56,11 +61,12 @@ class Corrector extends Transliteration
 
                 $result = NULL;
                 $meta_result = NULL;
+                $similar_percent = 0;
 
                 //Проверка всего слова
                 foreach($possibleWord as $n => $k) {
-                    //if(levenshtein($k, $enteredWord) <= $min_levenshtein + 100) {
-                        if(similar_text($k, $enteredWord) >= $similarity - 1) {
+                    //if(levenshtein($k, $enteredWord) <= $min_levenshtein) {
+                        if(similar_text($k, $enteredWord, $similar_percent) >= $similarity - 1) {
                             $result[$n] = $k;
                         }
                     //}
