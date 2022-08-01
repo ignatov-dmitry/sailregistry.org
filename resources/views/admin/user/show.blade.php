@@ -155,7 +155,10 @@
                     <thead>
                     <tr>
                         <th>#</th>
-                        <th>Имя</th>
+                        <th>Имя (ru)</th>
+                        <th>Фамилия (ru)</th>
+                        <th>Имя (en)</th>
+                        <th>Фамилия (en)</th>
                         <th>Страна</th>
                         <th>Дата рождени</th>
                         <th>Фото</th>
@@ -166,7 +169,10 @@
                     @foreach($similarUsers as $user)
                         <tr>
                             <td>{{ $user->id }}</td>
-                            <td><a href="{{ route('admin.users.edit', $user) }}">{{ $user->full_name }}</a></td>
+                            <td class="{{ similarColor($user->first_name_en, old('first_name_en', @$user->first_name_en)) }}"><a href="{{ route('admin.users.edit', $user) }}">{{ $user->first_name_en }}</a></td>
+                            <td class="{{ similarColor($user->last_name_en, old('last_name_en', @$user->last_name_en)) }}"><a href="{{ route('admin.users.edit', $user) }}">{{ $user->last_name_en }}</a></td>
+                            <td class="{{ similarColor($user->first_name_ru, old('first_name_ru', @$user->first_name_ru)) }}"><a href="{{ route('admin.users.edit', $user) }}">{{ $user->first_name_ru }}</a></td>
+                            <td class="{{ similarColor($user->last_name_ru, old('last_name_ru', @$user->last_name_ru)) }}"><a href="{{ route('admin.users.edit', $user) }}">{{ $user->last_name_ru }}</a></td>
                             <td>{{ @$user->country }}</td>
                             <td>{{ $user->birthday }}</td>
                             <td>
