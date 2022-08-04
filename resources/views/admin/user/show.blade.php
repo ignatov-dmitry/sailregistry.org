@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', Route::is('admin.users.edit') ? 'Редактировать: ' . $user->name : 'Добавить пользователя')
+@section('title', Route::is('admin.users.edit') ? 'Редактировать: ' . $user->user_login : 'Добавить пользователя')
 
 @section('content')
     <section class="content">
@@ -18,18 +18,18 @@
                 </div>
             </div>
             <div class="card-body">
-                {!! Form::open(['url' => Route::is('admin.users.edit') ? route('admin.users.update', $user) : route('admin.users.store'), 'enctype' => 'multipart/form-data', 'id' => 'user_form']) !!}
+                {!! Form::open(['url' => Route::is('admin.users.edit') ? route('admin.users.update', $user) : route('admin.users.store', request()->all()), 'enctype' => 'multipart/form-data', 'id' => 'user_form']) !!}
                 <div class="row">
                     <div class="col-4">
                         <div class="form-group">
                             {!! Form::label('last_name_ru', 'Фамилия (ru)', ['class' => 'col-form-label']); !!}
-                            {!! Form::input('text', 'last_name_ru', old('last_name_ru', @$user->last_name_ru), ['class' => 'form-control', @$canEdit]) !!}
+                            {!! Form::input('text', 'last_name_ru', old('last_name_ru', @$user->last_name_ru), ['class' => 'form-control', 'required', @$canEdit]) !!}
                         </div>
                     </div>
                     <div class="col-4">
                         <div class="form-group">
                             {!! Form::label('first_name_ru', 'Имя (ru)', ['class' => 'col-form-label']); !!}
-                            {!! Form::input('text', 'first_name_ru', old('first_name_ru', @$user->first_name_ru), ['class' => 'form-control', @$canEdit]) !!}
+                            {!! Form::input('text', 'first_name_ru', old('first_name_ru', @$user->first_name_ru), ['class' => 'form-control', 'required', @$canEdit]) !!}
                         </div>
                     </div>
                     <div class="col-4">
@@ -56,6 +56,7 @@
                             {!! Form::input('text', 'middle_name_en', old('middle_name_en', @$user->middle_name_en), ['class' => 'form-control', 'placeholder' => 'Заполняется автоматически', 'readonly']) !!}
                         </div>
                     </div>
+                    @if(Route::is('admin.users.edit'))
                     <div class="col-4">
                         <div class="form-group">
                             {!! Form::label('full_name', 'Полное имя', ['class' => 'col-form-label']); !!}
@@ -117,11 +118,18 @@
                     <div class="col-4">
                         <img src="{{ isset($user->img) ? '/' . $user->img : '' }}" id="photo" alt="">
                     </div>
+                    @endif
                 </div>
                 @role('super-admin', 'school-admin')
-                <div class="form-group mt-3">
-                    {!! Form::button('Сохранить', ['class' => 'btn btn-primary', 'type' => 'submit']) !!}
-                </div>
+                @if(@$similarUsers)
+                    <div class="form-group mt-3">
+                        {!! Form::button('Сохранить принудительно', ['class' => 'btn btn-primary', 'name' => 'force', 'value' => 1, 'type' => 'submit']) !!}
+                    </div>
+                @else
+                    <div class="form-group mt-3">
+                        {!! Form::button('Сохранить', ['class' => 'btn btn-primary', 'type' => 'submit']) !!}
+                    </div>
+                @endif
                 @endrole
                 {!! Form::close() !!}
 
@@ -144,7 +152,7 @@
         </div>
     </section>
 
-    @if($similarUsers)
+    @if(@$similarUsers)
     <section class="content">
         <div class="card">
             <div class="card-header">
@@ -161,6 +169,7 @@
                         <th>Фамилия (en)</th>
                         <th>Страна</th>
                         <th>Дата рождени</th>
+                        <th>Школы</th>
                         <th>Фото</th>
                         <th></th>
                     </tr>
@@ -169,12 +178,13 @@
                     @foreach($similarUsers as $user)
                         <tr>
                             <td>{{ $user->id }}</td>
-                            <td class="{{ similarColor($user->first_name_en, old('first_name_en', @$user->first_name_en)) }}"><a href="{{ route('admin.users.edit', $user) }}">{{ $user->first_name_en }}</a></td>
-                            <td class="{{ similarColor($user->last_name_en, old('last_name_en', @$user->last_name_en)) }}"><a href="{{ route('admin.users.edit', $user) }}">{{ $user->last_name_en }}</a></td>
-                            <td class="{{ similarColor($user->first_name_ru, old('first_name_ru', @$user->first_name_ru)) }}"><a href="{{ route('admin.users.edit', $user) }}">{{ $user->first_name_ru }}</a></td>
-                            <td class="{{ similarColor($user->last_name_ru, old('last_name_ru', @$user->last_name_ru)) }}"><a href="{{ route('admin.users.edit', $user) }}">{{ $user->last_name_ru }}</a></td>
+                            <td class="{{ similarColor($user->first_name_en, old('first_name_en', @$user->first_name_en)) }}"><a target="_blank" href="{{ route('admin.users.edit', $user) }}">{{ $user->first_name_en }}</a></td>
+                            <td class="{{ similarColor($user->last_name_en, old('last_name_en', @$user->last_name_en)) }}"><a target="_blank" href="{{ route('admin.users.edit', $user) }}">{{ $user->last_name_en }}</a></td>
+                            <td class="{{ similarColor($user->first_name_ru, old('first_name_ru', @$user->first_name_ru)) }}"><a target="_blank" href="{{ route('admin.users.edit', $user) }}">{{ $user->first_name_ru }}</a></td>
+                            <td class="{{ similarColor($user->last_name_ru, old('last_name_ru', @$user->last_name_ru)) }}"><a target="_blank" href="{{ route('admin.users.edit', $user) }}">{{ $user->last_name_ru }}</a></td>
                             <td>{{ @$user->country }}</td>
                             <td>{{ $user->birthday }}</td>
+                            <td>{{ implode(',', array_column($user->schools->toArray() , 'name')) }}</td>
                             <td>
                                 @if(isset($user->img))
                                     <img src="{{ '/' . $user->img }}" id="photo" alt="">
@@ -182,8 +192,34 @@
                             </td>
                             <td>
                                 <div class="d-flex flex-row">
-                                    <a href="{{ route('admin.users.show', $user) }}" class="btn btn-sm btn-outline-primary mr-1" target="_blank"><span class="fa fa-tv"></span></a>
+                                    <a href="{{ route('admin.users.edit', $user) }}" class="btn btn-sm btn-outline-primary mr-1" target="_blank"><span class="fa fa-tv"></span></a>
+                                    <a class="btn btn-sm btn-outline-primary mr-1" id="add_to_school" target="_blank"><span class="fa fa-plus"></span></a>
+                                @if(auth()->user()->hasRole('school-admin'))
+                                    <!-- Button trigger modal -->
+                                    <a type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#user_{{ $user->id }}">
+                                        Launch demo modal
+                                    </a>
+
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="user_{{ $user->id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLabel">Добавить пользователя в школу</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">X</button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    Добавить пользователя {{ $user->first_name_en }} {{ $user->last_name_en }} ({{ $user->first_name_ru }} {{ $user->last_name_ru }}) в школу {{ auth()->user()->schools[0]->name }}?
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                                                    <button type="button" class="btn btn-primary">Да</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
+                                @endif
                             </td>
                         </tr>
                     @endforeach

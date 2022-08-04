@@ -11,10 +11,10 @@ if (!function_exists('similarColor')){
             case $similarPercent >= 0 && $similarPercent <= 35:
                 $similarColor = 'bg-red';
                 break;
-            case $similarPercent > 35 && $similarPercent <= 75:
+            case $similarPercent > 35 && $similarPercent < 100:
                     $similarColor = 'bg-yellow';
                 break;
-            case $similarPercent > 75:
+            case $similarPercent = 100:
                 $similarColor = 'bg-green';
                 break;
         }

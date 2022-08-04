@@ -2,9 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Classes\Corrector;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\UserRequest;
 use App\Models\Country;
 use App\Models\Role;
 use App\Models\School;
@@ -90,23 +88,29 @@ class UserController extends Controller
         return view('admin.user.show', compact('countries', 'schools', 'schoolSelectAttributes', 'similarUsers'));
     }
 
-    public function store(UserRequest $request)
+    public function store(Request $request)
     {
-        //TODO Проверить чтобы небыло проблем со school_id При сохранении под админом школы (добавлялась школа, а не перезаписывалась)
         $insert = $request->toArray();
-
         $similarUsers = User::checkSimilarEntries($insert)->toArray();
+        $similarIds = array_column($similarUsers, 'id');
+        $similarIdsRequest = $request->get('similarIds') ? $request->get('similarIds') : [];
 
-        if (count($similarUsers)){
+        if (count($similarUsers) && array_diff($similarIds, $similarIdsRequest)) {
+
             $request->flash();
-            return redirect()->action([UserController::class, 'create'], ['similarIds' => array_column($similarUsers, 'id')]);
+            return redirect()->action([UserController::class, 'create'], ['similarIds' => $similarIds]);
         }
 
         if (isset($insert['img'])) {
             $insert['img'] = User::uploadPhoto($insert['img'], User::LOGO_PATH);
         }
 
+
+
         $user = User::create($insert);
+        $user->hash = \hash('sha1', env('APP_KEY') . $user->id);
+        $user->save();
+
         $schoolRoleId = Role::whereSlug(Role::BASIC_CONTRIBUTOR)->first()->id;
 
         if (isset($insert['school_id']) && is_array($insert['school_id']) && Auth::user()->hasRole(Role::SUPER_ADMIN)) {
@@ -131,6 +135,7 @@ class UserController extends Controller
 
         $countries = Country::all(['id', 'name'])->toArray();
         $countries = array_combine(array_column($countries, 'id'), array_column($countries, 'name'));
+        array_unshift($countries, '');
 
         $schools = School::all(['id', 'name'])->toArray();
         $schools = array_combine(array_column($schools, 'id'), array_column($schools, 'name'));
@@ -158,8 +163,26 @@ class UserController extends Controller
         return view('admin.user.show', compact('schools', 'countries', 'user', 'canEdit', 'schoolSelectAttributes', 'userSchoolsIds'));
     }
 
-    public function update(UserRequest $request, User $user)
+    public function update(Request $request, User $user)
     {
+        $validateFields = array(
+            'last_name_ru'  => 'required',
+            'first_name_ru' => 'required',
+            'user_login'    => 'required',
+            'email'         => 'required',
+            'country_id'    => 'gt:0',
+            'img'           => 'image|mimes:jpg,jpeg,png,gif|max:2048'
+        );
+
+        if ($user->user_login !== $request->get('user_login'))
+            $validateFields['user_login'] = 'required|unique:users';
+
+        if ($user->email !== $request->get('email'))
+            $validateFields['email'] = 'required|unique:users';
+
+        $request->validate($validateFields);
+
+
         //TODO Проверить чтобы небыло проблем со school_id При сохранении под админом школы (добавлялась школа, а не перезаписывалась)
         $updateData = array('id' => $user->id);
         $updateData = array_merge($updateData, $request->toArray());
