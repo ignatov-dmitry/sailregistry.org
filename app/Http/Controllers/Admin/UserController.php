@@ -232,7 +232,11 @@ class UserController extends Controller
         return view('admin.email.credentials', ['login' => $user->user_login, 'password' => $password]);
     }
 
-    public function checkSimilar(UserRequest $request) {
+    public function addToSchool(User $user) {
+        $schoolId = (Auth::user()->schools->toArray())[0]['id'];
+        $schoolRoleId = Role::whereSlug(Role::BASIC_CONTRIBUTOR)->first()->id;
+        $user->schools()->sync([$schoolId => ['role_id' => $schoolRoleId]], false);
 
+        return response()->redirectToRoute('admin.users.edit', $user);
     }
 }

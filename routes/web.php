@@ -120,6 +120,10 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth']], 
 
             return response()->json($transliteratedArray);
         });
+
+        Route::post('/addToSchool/{user}', [UserController::class, 'addToSchool'])->name('addToSchool')->middleware(
+            ['middleware' => 'role:school-admin']
+        );
     });
 
 

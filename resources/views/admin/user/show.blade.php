@@ -193,31 +193,32 @@
                             <td>
                                 <div class="d-flex flex-row">
                                     <a href="{{ route('admin.users.edit', $user) }}" class="btn btn-sm btn-outline-primary mr-1" target="_blank"><span class="fa fa-tv"></span></a>
-                                    <a class="btn btn-sm btn-outline-primary mr-1" id="add_to_school" target="_blank"><span class="fa fa-plus"></span></a>
                                 @if(auth()->user()->hasRole('school-admin'))
                                     <!-- Button trigger modal -->
                                     <a type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#user_{{ $user->id }}">
-                                        Launch demo modal
+                                        <span class="fa fa-plus"></span>
                                     </a>
 
                                     <!-- Modal -->
-                                    <div class="modal fade" id="user_{{ $user->id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="exampleModalLabel">Добавить пользователя в школу</h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">X</button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    Добавить пользователя {{ $user->first_name_en }} {{ $user->last_name_en }} ({{ $user->first_name_ru }} {{ $user->last_name_ru }}) в школу {{ auth()->user()->schools[0]->name }}?
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
-                                                    <button type="button" class="btn btn-primary">Да</button>
+                                        {!! Form::open(['url' => route('admin.users.addToSchool', $user), 'id' => 'add_to_school']) !!}
+                                        <div class="modal fade" id="user_{{ $user->id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLabel">Добавить пользователя в школу</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">X</button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        Добавить пользователя {{ $user->first_name_en }} {{ $user->last_name_en }} ({{ $user->first_name_ru }} {{ $user->last_name_ru }}) в школу {{ auth()->user()->schools[0]->name }}?
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                                                        <button type="submit" class="btn btn-primary">Да</button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                        {!! Form::close() !!}
                                 </div>
                                 @endif
                             </td>
