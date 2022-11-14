@@ -117,7 +117,8 @@ class UserController extends Controller
             $user->schools()->syncWithPivotValues($insert['school_id'], ['role_id' => $schoolRoleId]);
         }
         else {
-            $user->roles()->sync([$schoolRoleId => ['school_id' => Auth::user()->schools->first()->id]]);
+            if (isset(Auth::user()->schools->first()->id))
+                $user->roles()->sync([$schoolRoleId => ['school_id' => Auth::user()->schools->first()->id]]);
         }
 
 

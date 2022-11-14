@@ -15,8 +15,11 @@ class Corrector extends Transliteration
     public function setWords(array $words)
     {
         $this->words = array();
-        foreach ($words as $word)
-            $this->words[$word] = self::make($word);
+        foreach ($words as $word){
+            if ($word && is_string($word))
+                $this->words[$word] = self::make($word);
+        }
+
     }
 
     public function correctWord($words): array
