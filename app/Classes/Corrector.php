@@ -19,7 +19,6 @@ class Corrector extends Transliteration
             if ($word && is_string($word))
                 $this->words[$word] = self::make($word);
         }
-
     }
 
     public function correctWord($words): array
